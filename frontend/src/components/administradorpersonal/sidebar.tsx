@@ -14,8 +14,8 @@ const Sidebar: React.FC = () => {
   };
 
   const handleLogout = () => {
-    // Lógica para cerrar sesión (redirigir a la página de login o hacer un logout)
-    router.push('/login');
+    
+    router.push('/');
   };
 
   return (
