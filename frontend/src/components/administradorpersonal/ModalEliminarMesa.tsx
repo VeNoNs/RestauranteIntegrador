@@ -45,7 +45,7 @@ const ModalEliminarMesa: React.FC<ModalEliminarMesaProps> = ({ onClose }) => {
           <button onClick={handleEliminarMesa} className="bg-red-500 text-white py-2 px-4 rounded">
             Eliminar
           </button>
-          <button onClick={onClose} className="bg-gray-500 text-white py-2 px-4 rounded">
+          <button onClick={onClose} className="bg-black text-white py-2 px-4 rounded">
             Cancelar
           </button>
         </div>

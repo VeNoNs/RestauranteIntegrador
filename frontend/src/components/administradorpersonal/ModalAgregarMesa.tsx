@@ -46,10 +46,10 @@ const ModalAgregarMesa: React.FC<ModalAgregarMesaProps> = ({ onClose }) => {
         />
 
         <div className="flex justify-end space-x-4">
-          <button onClick={handleAgregarMesa} className="bg-black text-white py-2 px-4 rounded">
+          <button onClick={handleAgregarMesa} className="bg-green-400 text-white py-2 px-4 rounded">
             Agregar
           </button>
-          <button onClick={onClose} className="bg-gray-500 text-white py-2 px-4 rounded">
+          <button onClick={onClose} className="bg-red-400 text-white py-2 px-4 rounded">
             Cancelar
           </button>
         </div>
