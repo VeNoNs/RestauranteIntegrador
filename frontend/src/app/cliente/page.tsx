@@ -82,7 +82,7 @@ const ClientePage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {productos[categoriaSeleccionada] ? (
           productos[categoriaSeleccionada].map((producto) => (
-            <div key={producto.id} className="border shadow-lg p-4 rounded-lg text-center bg-white hover:shadow-2xl">
+            <div key={producto.id} className="border shadow-lg p-4 rounded-lg text-center bg-white hover:shadow-2xl text-black">
               <img
                 src="/default-product.jpg"
                 alt={producto.nombre}
