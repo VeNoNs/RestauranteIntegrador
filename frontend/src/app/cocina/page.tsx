@@ -1,7 +1,7 @@
 'use client';
 import "@/styles/globals.css";
 import React, { useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 interface Pedido {
   id: string;
   nombre: string;
@@ -9,6 +9,7 @@ interface Pedido {
 }
 
 const CocinaPage: React.FC = () => {
+  const router = useRouter();
   const [pedidos, setPedidos] = useState<Pedido[]>([
     { id: '1', nombre: 'Pizza Margherita', estado: 'Pendiente' },
     { id: '2', nombre: 'Ensalada César', estado: 'Pendiente' },
@@ -31,7 +32,8 @@ const CocinaPage: React.FC = () => {
   };
 
   const handleCerrarSesion = () => {
-    // Aquí puedes agregar la lógica para cerrar sesión.
+    
+    router.push('/');
     console.log('Cerrando sesión');
   };
 
