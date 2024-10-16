@@ -37,8 +37,8 @@ const ModalCarrito: React.FC = () => {
         {/* Pasos */}
         {pasoActual === 1 && (
           <div>
-            <h2 className="text-xl font-bold mb-4">Selecciona tus platos</h2>
-            <table className="min-w-full table-auto">
+            <h2 className="text-xl font-bold mb-4 text-black">Selecciona tus platos</h2>
+            <table className="min-w-full table-auto text-black">
               <thead>
                 <tr>
                   <th className="px-4 py-2 text-left">Plato</th>
@@ -48,10 +48,10 @@ const ModalCarrito: React.FC = () => {
               </thead>
               <tbody>
                 {productosSeleccionados.map((producto) => (
-                  <tr key={producto.id} className="hover:bg-gray-100">
-                    <td className="px-4 py-2">{producto.nombre}</td>
-                    <td className="px-4 py-2">{producto.cantidad}</td>
-                    <td className="px-4 py-2">S/. {producto.precio.toFixed(2)}</td>
+                  <tr key={producto.id} className="hover:bg-gray-100 text-black">
+                    <td className="px-4 py-2 text-black">{producto.nombre}</td>
+                    <td className="px-4 py-2 text-black">{producto.cantidad}</td>
+                    <td className="px-4 py-2 text-black">S/. {producto.precio.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -61,22 +61,22 @@ const ModalCarrito: React.FC = () => {
 
         {pasoActual === 2 && (
           <div>
-            <h2 className="text-xl font-bold mb-4">Método de Pago</h2>
+            <h2 className="text-xl font-bold mb-4 text-black" >Método de Pago</h2>
             <form>
               <div className="mb-4">
-                <label className="block mb-2">Nombre en la tarjeta</label>
+                <label className="block mb-2 text-black">Nombre en la tarjeta</label>
                 <input type="text" className="w-full border px-4 py-2 rounded-lg" />
               </div>
               <div className="mb-4">
-                <label className="block mb-2">Número de la tarjeta</label>
+                <label className="block mb-2 text-black">Número de la tarjeta</label>
                 <input type="text" className="w-full border px-4 py-2 rounded-lg" />
               </div>
               <div className="mb-4">
-                <label className="block mb-2">Fecha de expiración</label>
+                <label className="block mb-2 text-black">Fecha de expiración</label>
                 <input type="text" className="w-full border px-4 py-2 rounded-lg" />
               </div>
               <div className="mb-4">
-                <label className="block mb-2">Código CVV</label>
+                <label className="block mb-2 text-black">Código CVV</label>
                 <input type="text" className="w-full border px-4 py-2 rounded-lg" />
               </div>
             </form>
@@ -85,16 +85,16 @@ const ModalCarrito: React.FC = () => {
 
         {pasoActual === 3 && (
           <div>
-            <h2 className="text-xl font-bold mb-4">Resumen de la Compra</h2>
-            <p className="mb-4">Gracias por tu compra. Aquí está el resumen de tu pedido:</p>
-            <ul className="mb-4">
+            <h2 className="text-xl font-bold mb-4 text-black">Resumen de la Compra</h2>
+            <p className="mb-4 text-black">Gracias por tu compra. Aquí está el resumen de tu pedido:</p>
+            <ul className="mb-4 text-black">
               {productosSeleccionados.map((producto) => (
                 <li key={producto.id}>
                   {producto.cantidad} x {producto.nombre} - S/. {producto.precio.toFixed(2)}
                 </li>
               ))}
             </ul>
-            <p className="font-bold">Total: S/. {productosSeleccionados.reduce((acc, producto) => acc + (producto.precio * producto.cantidad), 0).toFixed(2)}</p>
+            <p className="font-bold text-black">Total: S/. {productosSeleccionados.reduce((acc, producto) => acc + (producto.precio * producto.cantidad), 0).toFixed(2)}</p>
           </div>
         )}
 
