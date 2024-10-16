@@ -13,6 +13,10 @@ const productos: { [key: string]: Producto[] } = {
   Entradas: [
     { id: 1, nombre: 'Ceviche', precio: 50.00 },
     { id: 2, nombre: 'Anticuchos', precio: 40.00 },
+    { id: 11, nombre: 'Sopa', precio: 40.00 },
+    { id: 12, nombre: 'Cuy Chactado', precio: 40.00 },
+    { id: 13, nombre: 'Pollo Broaster', precio: 40.00 },
+
   ],
   'Plato principal': [
     { id: 3, nombre: 'Lomo Saltado', precio: 55.00 },
@@ -84,7 +88,7 @@ const ClientePage: React.FC = () => {
           productos[categoriaSeleccionada].map((producto) => (
             <div key={producto.id} className="border shadow-lg p-4 rounded-lg text-center bg-white hover:shadow-2xl text-black">
               <img
-                src="/default-product.jpg"
+                src="assets/imagen5.jpeg"
                 alt={producto.nombre}
                 className="w-full h-40 object-cover mb-4 rounded-lg"
               />
