@@ -49,10 +49,10 @@ const ModalEditarProducto: React.FC<ModalEditarProductoProps> = ({ producto, onC
         />
 
         <div className="flex justify-end space-x-4">
-          <button onClick={handleEditarProducto} className="bg-black text-white py-2 px-4 rounded">
+          <button onClick={handleEditarProducto} className="bg-green-400 text-white py-2 px-4 rounded">
             Guardar
           </button>
-          <button onClick={onClose} className="bg-gray-500 text-white py-2 px-4 rounded">
+          <button onClick={onClose} className="bg-black text-white py-2 px-4 rounded">
             Cancelar
           </button>
         </div>

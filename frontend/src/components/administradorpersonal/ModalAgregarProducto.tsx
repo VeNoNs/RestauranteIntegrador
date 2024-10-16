@@ -38,10 +38,10 @@ const ModalAgregarProducto: React.FC<ModalAgregarProductoProps> = ({ onClose }) 
         />
 
         <div className="flex justify-end space-x-4">
-          <button onClick={handleAgregarProducto} className="bg-black text-white py-2 px-4 rounded">
+          <button onClick={handleAgregarProducto} className="bg-green-500 text-white py-2 px-4 rounded">
             Agregar
           </button>
-          <button onClick={onClose} className="bg-gray-500 text-white py-2 px-4 rounded">
+          <button onClick={onClose} className="bg-red-500 text-white py-2 px-4 rounded">
             Cancelar
           </button>
         </div>

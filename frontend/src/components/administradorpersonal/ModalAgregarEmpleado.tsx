@@ -42,10 +42,10 @@ const ModalAgregarEmpleado: React.FC<ModalAgregarEmpleadoProps> = ({ onClose }) 
         </select>
 
         <div className="flex justify-end space-x-4">
-          <button onClick={handleAgregarEmpleado} className="bg-black text-white py-2 px-4 rounded">
+          <button onClick={handleAgregarEmpleado} className="bg-green-500 text-white py-2 px-4 rounded">
             Agregar
           </button>
-          <button onClick={onClose} className="bg-gray-500 text-white py-2 px-4 rounded">
+          <button onClick={onClose} className="bg-red-500 text-white py-2 px-4 rounded">
             Cancelar
           </button>
         </div>
