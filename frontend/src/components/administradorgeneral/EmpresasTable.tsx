@@ -25,10 +25,13 @@ const EmpresasTable: React.FC<{ onSelectEmpresa: (empresa: Empresa) => void }> =
               ID Empresa
             </th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Nombre Empresa
+              Nombre 
             </th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Teléfono
+              Empresa  
+            </th>
+            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Teléfono     
             </th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Correo
@@ -45,6 +48,7 @@ const EmpresasTable: React.FC<{ onSelectEmpresa: (empresa: Empresa) => void }> =
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.nombre}</td>
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.empresa}</td>
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.telefono}</td>
+              <td className="py-3 px-4 text-sm text-gray-900">{empresa.correo}</td>
               <td className="py-3 px-4">
                 {/* Botón Editar dentro de la tabla con el nuevo estilo */}
                 <button
