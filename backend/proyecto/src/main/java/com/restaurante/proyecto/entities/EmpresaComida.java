@@ -8,7 +8,7 @@ public class EmpresaComida {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idempresa")
+    @Column(name = "idEmpresa")
     private Long idEmpresa;
 
     @Column(name = "ubicacion", nullable = false, length = 100)

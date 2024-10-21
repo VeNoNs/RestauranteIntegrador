@@ -9,7 +9,7 @@ public class Pago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idpago")
+    @Column(name = "idPago")
     private Long idPago;
 
     @Column(name = "fecha_pago", nullable = false)

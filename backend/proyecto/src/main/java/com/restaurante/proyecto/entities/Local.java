@@ -8,10 +8,10 @@ public class Local {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idempresa")
+    @Column(name = "idEmpresa")
     private Long idEmpresa;
 
-    @Column(name = "nro_mesa", nullable = false)
+    @Column(name = "nroMesa", nullable = false)
     private int nroMesa;
 
     public Local() {

@@ -18,11 +18,11 @@ public class Orden {
     private double subTotal;
 
     @ManyToOne
-    @JoinColumn(name = "idcomida", nullable = false)
+    @JoinColumn(name = "idComida", nullable = false)
     private Comida comida;
 
     @ManyToOne
-    @JoinColumn(name = "idempresa", nullable = false)
+    @JoinColumn(name = "idEmpresa", nullable = false)
     private Local local;
 
     public Orden() {
