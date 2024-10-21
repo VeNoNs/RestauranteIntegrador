@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name="administrador_empresa")
 
-public class Empresa {
+public class AdministradorEmpresa {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +22,11 @@ public class Empresa {
     @Column(name="password", nullable = false, length = 50)
     private String password;
     
-    public Empresa() {
+    public AdministradorEmpresa() {
 
     }
 
-    public Empresa(Long idEmpresa, String nombreEmpresa, String telefono, String usuario, String password) {
+    public AdministradorEmpresa(Long idEmpresa, String nombreEmpresa, String telefono, String usuario, String password) {
         this.idEmpresa = idEmpresa;
         this.nombreEmpresa = nombreEmpresa;
         this.telefono = telefono;

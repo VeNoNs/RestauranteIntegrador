@@ -4,36 +4,36 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.restaurante.proyecto.entities.Empresa;
+import com.restaurante.proyecto.entities.AdministradorEmpresa;
 import com.restaurante.proyecto.repository.*;
 import com.restaurante.proyecto.service.*;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmpresaServiceImpl implements EmpresaService{
+public class AdministradorEmpresaServiceImpl implements AdministradorEmpresaService{
     
     @Autowired
-    private EmpresaRepository empresaRepository;
+    private AdministradorEmpresaRepository empresaRepository;
 
     @Override
-    public List<Empresa> obtenerTodos(){
+    public List<AdministradorEmpresa> obtenerTodos(){
         return empresaRepository.findAll();
     }
 
     @Override
-    public Empresa obtenerPorId(Long id){
+    public AdministradorEmpresa obtenerPorId(Long id){
         return empresaRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Empresa crearEmpresa(Empresa empresa){
-        empresa = new Empresa(null, "nombreEmpresa","990204101","user1","contraseña1");
+    public AdministradorEmpresa crearEmpresa(AdministradorEmpresa empresa){
+        empresa = new AdministradorEmpresa(null, "nombreEmpresa","990204101","user1","contraseña1");
         return empresaRepository.save(empresa);
     }
 
     @Override
-    public Empresa actualizarEmpresa(Long id, Empresa empresa){
-        Empresa empresaBD = empresaRepository.findById(id).orElse(null);
+    public AdministradorEmpresa actualizarEmpresa(Long id, AdministradorEmpresa empresa){
+        AdministradorEmpresa empresaBD = empresaRepository.findById(id).orElse(null);
 
         if(empresaBD != null){
             empresaBD.setNombreEmpresa(empresa.getNombreEmpresa());
