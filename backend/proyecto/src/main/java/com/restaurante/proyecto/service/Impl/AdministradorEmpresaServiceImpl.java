@@ -27,7 +27,6 @@ public class AdministradorEmpresaServiceImpl implements AdministradorEmpresaServ
 
     @Override
     public AdministradorEmpresa crearEmpresa(AdministradorEmpresa empresa){
-        empresa = new AdministradorEmpresa(null, "nombreEmpresa","990204101","user1","contraseña1");
         return empresaRepository.save(empresa);
     }
 
