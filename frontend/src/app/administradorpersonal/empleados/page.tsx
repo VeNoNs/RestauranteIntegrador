@@ -36,14 +36,14 @@ const EmpleadosPage: React.FC = () => {
         <div className="flex justify-end space-x-4 mb-6">
           <button
             onClick={handleAgregarClick}
-            className="bg-black text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-900"
+            className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-green-700"
           >
             Agregar
           </button>
   
           <button
             onClick={handleEliminarClick}
-            className="bg-black text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-900"
+            className="bg-red-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-red-700"
           >
             Eliminar
           </button>

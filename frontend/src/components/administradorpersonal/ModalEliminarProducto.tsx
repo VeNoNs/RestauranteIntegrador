@@ -53,7 +53,7 @@ const ModalEliminarProducto: React.FC<ModalEliminarProductoProps> = ({ onClose }
         </ul>
 
         <div className="flex justify-end">
-          <button onClick={onClose} className="bg-gray-500 text-white py-2 px-4 rounded">
+          <button onClick={onClose} className="bg-black text-white py-2 px-4 rounded">
             Cancelar
           </button>
         </div>

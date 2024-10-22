@@ -20,7 +20,9 @@ const ProductosPage: React.FC = () => {
       { id: '2', nombre: 'Producto 2', precio: 60, categoria: 'Plato Principal', img: '/path-to-image-2' },
       { id: '3', nombre: 'Producto 3', precio: 70, categoria: 'Sopa', img: '/path-to-image-3' },
       { id: '4', nombre: 'Producto 4', precio: 80, categoria: 'Parrilla', img: '/path-to-image-4' },
-      // Agregar más productos con categorías diferentes
+      { id: '5', nombre: 'Producto 5', precio: 90, categoria: 'Bebidas', img: '/path-to-image-5' },
+      { id: '6', nombre: 'Producto 6', precio: 100, categoria: 'Postres', img: '/path-to-image-6' },
+      
     ];
   
     const handleAgregarClick = () => {
@@ -66,14 +68,14 @@ const ProductosPage: React.FC = () => {
         <div className="flex justify-end space-x-4 mb-4">
           <button
             onClick={handleAgregarClick}
-            className="bg-black text-white py-2 px-4 rounded"
+            className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-green-700"
           >
             Agregar
           </button>
   
           <button
             onClick={handleEliminarClick}
-            className="bg-black text-white py-2 px-4 rounded"
+            className="bg-red-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-red-700"
           >
             Eliminar
           </button>
