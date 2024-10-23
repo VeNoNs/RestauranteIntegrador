@@ -14,6 +14,10 @@ interface ModalCarritoProps {
 
 const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
   const [pasoActual, setPasoActual] = useState(1);
+  const [nombreTarjeta, setNombreTarjeta] = useState('');
+  const [numeroTarjeta, setNumeroTarjeta] = useState('');
+  const [fechaExpiracion, setFechaExpiracion] = useState('');
+  const [codigoCVV, setCodigoCVV] = useState('');
 
   const avanzarPaso = () => {
     if (pasoActual < 3) {
@@ -28,6 +32,35 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
   };
 
   const total = carrito.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
+
+  const confirmarOrden = async () => {
+    const ordenes = carrito.map(item => ({
+      cantidad: item.cantidad,
+      subTotal: item.producto.precio * item.cantidad,
+      comida: { idComida: item.producto.id }, // Suponiendo que la entidad Comida tiene un idComida
+      local: { idEmpresa: 1 } // Cambia 1 por el ID correspondiente de tu local
+    }));
+
+    try {
+      const response = await fetch('/orden/api/nueva', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ordenes),
+      });
+
+      if (response.ok) {
+        // Manejar la respuesta si es necesario
+        console.log('Órdenes guardadas con éxito');
+        onClose(); // Cerrar el modal después de confirmar
+      } else {
+        console.error('Error al guardar la orden');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -70,19 +103,39 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
             <form>
               <div className="mb-4">
                 <label className="block mb-2 text-black">Nombre en la tarjeta</label>
-                <input type="text" className="w-full border px-4 py-2 rounded-lg" />
+                <input
+                  type="text"
+                  className="w-full border px-4 py-2 rounded-lg"
+                  value={nombreTarjeta}
+                  onChange={(e) => setNombreTarjeta(e.target.value)}
+                />
               </div>
               <div className="mb-4">
                 <label className="block mb-2 text-black">Número de la tarjeta</label>
-                <input type="text" className="w-full border px-4 py-2 rounded-lg" />
+                <input
+                  type="text"
+                  className="w-full border px-4 py-2 rounded-lg"
+                  value={numeroTarjeta}
+                  onChange={(e) => setNumeroTarjeta(e.target.value)}
+                />
               </div>
               <div className="mb-4">
                 <label className="block mb-2 text-black">Fecha de expiración</label>
-                <input type="text" className="w-full border px-4 py-2 rounded-lg" />
+                <input
+                  type="text"
+                  className="w-full border px-4 py-2 rounded-lg"
+                  value={fechaExpiracion}
+                  onChange={(e) => setFechaExpiracion(e.target.value)}
+                />
               </div>
               <div className="mb-4">
                 <label className="block mb-2 text-black">Código CVV</label>
-                <input type="text" className="w-full border px-4 py-2 rounded-lg" />
+                <input
+                  type="text"
+                  className="w-full border px-4 py-2 rounded-lg"
+                  value={codigoCVV}
+                  onChange={(e) => setCodigoCVV(e.target.value)}
+                />
               </div>
             </form>
           </div>
@@ -116,7 +169,7 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
             </button>
           )}
           {pasoActual === 3 && (
-            <button className="bg-green-500 text-white py-2 px-4 rounded-lg">
+            <button onClick={confirmarOrden} className="bg-green-500 text-white py-2 px-4 rounded-lg">
               Confirmar
             </button>
           )}
