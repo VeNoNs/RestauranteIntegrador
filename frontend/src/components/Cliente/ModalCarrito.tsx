@@ -19,26 +19,14 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
   const [fechaExpiracion, setFechaExpiracion] = useState('');
   const [codigoCVV, setCodigoCVV] = useState('');
 
-  const avanzarPaso = () => {
-    if (pasoActual < 3) {
-      setPasoActual(pasoActual + 1);
-    }
-  };
-
-  const retrocederPaso = () => {
-    if (pasoActual > 1) {
-      setPasoActual(pasoActual - 1);
-    }
-  };
-
   const total = carrito.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
 
   const confirmarOrden = async () => {
     const ordenes = carrito.map(item => ({
       cantidad: item.cantidad,
       subTotal: item.producto.precio * item.cantidad,
-      comida: { idComida: item.producto.id }, // Suponiendo que la entidad Comida tiene un idComida
-      local: { idEmpresa: 1 } // Cambia 1 por el ID correspondiente de tu local
+      comida: { idComida: item.producto.id }, 
+      local: { idEmpresa: 1 }, 
     }));
 
     try {
@@ -51,7 +39,6 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
       });
 
       if (response.ok) {
-        // Manejar la respuesta si es necesario
         console.log('Órdenes guardadas con éxito');
         onClose(); // Cerrar el modal después de confirmar
       } else {
@@ -59,6 +46,18 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
+    }
+  };
+
+  const avanzarPaso = () => {
+    if (pasoActual < 3) {
+      setPasoActual(pasoActual + 1);
+    }
+  };
+
+  const retrocederPaso = () => {
+    if (pasoActual > 1) {
+      setPasoActual(pasoActual - 1);
     }
   };
 
@@ -174,7 +173,7 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
             </button>
           )}
           <button onClick={onClose} className="bg-gray-500 text-white py-2 px-4 rounded-lg">
-            Cerrar
+            Cancelar
           </button>
         </div>
       </div>
