@@ -98,7 +98,8 @@ const EmpleadosPage: React.FC = () => {
                   empleadoSeleccionado === empleado.idEmpleado ? 'bg-purple-100' : ''
                 }`}
                 onClick={() => seleccionarEmpleado(empleado.idEmpleado)}
-              >
+              > 
+                <td className="px-6 py-4 text-black">{empleado.idEmpleado}</td>
                 <td className="px-6 py-4 text-black">{empleado.nombreEmpleado}</td>
                 <td className="px-6 py-4 text-black">{empleado.apellidoEmpleado}</td>
                 <td className="px-6 py-4 text-black">{empleado.tipoEmpleado}</td>
