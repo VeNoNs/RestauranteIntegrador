@@ -78,7 +78,7 @@ const AgregarModal: React.FC<AgregarModalProps> = ({ closeModal, onEmpresaAgrega
         >
           &times;
         </button>
-        <h2 className="text-2xl font-bold mb-4">Agregar Empresa</h2>
+        <h2 className="text-black text-2xl font-bold mb-4">Agregar Empresa</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -86,7 +86,7 @@ const AgregarModal: React.FC<AgregarModalProps> = ({ closeModal, onEmpresaAgrega
             placeholder="Nombre de la empresa"
             value={nombreEmpresa}
             onChange={(e) => setNombreEmpresa(e.target.value)}
-            className="border p-2 mb-4 w-full rounded"
+            className="text-black border p-2 mb-4 w-full rounded"
           />
           <input
             type="text"
@@ -94,7 +94,7 @@ const AgregarModal: React.FC<AgregarModalProps> = ({ closeModal, onEmpresaAgrega
             placeholder="Teléfono"
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
-            className="border p-2 mb-4 w-full rounded"
+            className="text-black border p-2 mb-4 w-full rounded"
           />
           <input
             type="email"
@@ -102,7 +102,7 @@ const AgregarModal: React.FC<AgregarModalProps> = ({ closeModal, onEmpresaAgrega
             placeholder="Correo"
             value={correo}
             onChange={(e) => setCorreo(e.target.value)}
-            className="border p-2 mb-4 w-full rounded"
+            className="text-black border p-2 mb-4 w-full rounded"
           />
           <button type="submit" className="bg-black text-white px-4 py-2 rounded-full w-full hover:bg-gray-800">
             Agregar
