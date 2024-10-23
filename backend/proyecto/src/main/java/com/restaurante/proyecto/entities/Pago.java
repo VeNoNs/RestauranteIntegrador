@@ -12,7 +12,7 @@ public class Pago {
     @Column(name = "idPago")
     private Long idPago;
 
-    @Column(name = "fecha_pago", nullable = false)
+    @Column(name = "fechaPago", nullable = false)
     private LocalDate fechaPago;
 
     @Column(name = "monto", nullable = false)

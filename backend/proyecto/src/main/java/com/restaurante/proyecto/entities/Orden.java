@@ -8,7 +8,7 @@ public class Orden {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idorden")
+    @Column(name = "idOrden")
     private Long idOrden;
 
     @Column(name = "cantidad", nullable = false)

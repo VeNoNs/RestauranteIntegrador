@@ -8,16 +8,16 @@ public class Empleado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idempleado")
+    @Column(name = "idEmpleado")
     private Long idEmpleado;
 
-    @Column(name = "nombre_empleado", nullable = false, length = 50)
+    @Column(name = "nombreEmpleado", nullable = false, length = 50)
     private String nombreEmpleado;
 
-    @Column(name = "apellido_empleado", nullable = false, length = 50)
+    @Column(name = "apellidoEmpleado", nullable = false, length = 50)
     private String apellidoEmpleado;
 
-    @Column(name = "tipo_empleado", nullable = false, length = 20)
+    @Column(name = "tipoEmpleado", nullable = false, length = 20)
     private String tipoEmpleado;
 
     @ManyToOne
