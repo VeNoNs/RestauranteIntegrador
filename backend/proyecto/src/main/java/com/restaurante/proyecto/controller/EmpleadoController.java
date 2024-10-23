@@ -27,8 +27,15 @@ public class EmpleadoController {
     @PostMapping("/api/nuevo")
     @ResponseBody
     public ResponseEntity<Empleado> guardarNuevoEmpleado(@RequestBody Empleado empleado) {
-        Empleado nuevoEmpleado = empleadoService.crearEmpleado(empleado);
-        return ResponseEntity.ok(nuevoEmpleado);
+        try {
+            Empleado nuevoEmpleado = empleadoService.crearEmpleado(empleado);
+            return ResponseEntity.ok(nuevoEmpleado);
+        } catch (Exception e) {
+
+            return ResponseEntity.badRequest().body(null);
+        }
+        /*Empleado nuevoEmpleado = empleadoService.crearEmpleado(empleado);
+        return ResponseEntity.ok(nuevoEmpleado);*/
     }
 
     // 3. PUT - Editar un registro existente
