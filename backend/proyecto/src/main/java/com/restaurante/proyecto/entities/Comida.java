@@ -11,10 +11,10 @@ public class Comida {
     @Column(name = "idComida")
     private Long idComida;
 
-    @Column(name = "nombre_comida", nullable = false, length = 50)
+    @Column(name = "nombreComida", nullable = false, length = 50)
     private String nombreComida;
 
-    @Column(name = "tipo_comida", nullable = false, length = 50)
+    @Column(name = "tipoComida", nullable = false, length = 50)
     private String tipoComida;
 
     @Column(name = "descripcion", length = 100)
