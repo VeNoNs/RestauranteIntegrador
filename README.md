@@ -1,4 +1,5 @@
 ![casosuso](https://github.com/user-attachments/assets/75004744-324b-4659-b5a7-4a4eda967433)
+
 CU01: Configurar Sistema 
    
 CU02: Reservar Mesa 
