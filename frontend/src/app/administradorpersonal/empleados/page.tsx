@@ -1,20 +1,24 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ModalAgregarEmpleado from '@/components/administradorpersonal/ModalAgregarEmpleado';
 import ModalEliminarEmpleado from '@/components/administradorpersonal/ModalEliminarEmpleado';
+import EmpleadosTable from '@/components/administradorpersonal/EmpladosTable';
 
-
+interface Empleado {
+  idEmpleado: string;
+  nombreEmpleado: string;
+  apellidoEmpleado: string;
+  tipoEmpleado: string;
+  
+}
 
 const EmpleadosPage: React.FC = () => {
     const [isAgregarModalOpen, setIsAgregarModalOpen] = useState(false);
     const [isEliminarModalOpen, setIsEliminarModalOpen] = useState(false);
     const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState<string | null>(null);
+    const [empleados, setEmpleados] = useState<Empleado[]>([]);
   
-    const empleados = [
-      { id: '1', nombre: 'Carlos Ruiz', rol: 'Cocina' },
-      { id: '2', nombre: 'Ana Fernández', rol: 'Mozo' },
-      { id: '3', nombre: 'Pedro Sánchez', rol: 'Administrador' },
-    ];
+   
   
     const handleAgregarClick = () => {
       setIsAgregarModalOpen(true);
@@ -27,6 +31,32 @@ const EmpleadosPage: React.FC = () => {
     const seleccionarEmpleado = (id: string) => {
       setEmpleadoSeleccionado(id);
     };
+
+    useEffect(() => {
+      const fetchEmpleados = async () => {
+        try {
+          const response = await fetch('http://localhost:8080/empleado/api/verempleados');
+          if (!response.ok) {
+            throw new Error('Error al obtener empleados');
+          }
+          const data = await response.json();
+          
+          // Mapeo para alinear las propiedades del backend con las del frontend
+          const empleadosMapped = data.map((empleado: any) => ({
+            idEmpleado: empleado.idEmpleado,
+            nombreEmpleado: empleado.nombreEmpleado,
+            apellidoEmpleado: empleado.apellidoEmpleado,
+            tipoEmpleado: empleado.tipoEmpleado,
+          }));
+  
+          setEmpleados(empleadosMapped);
+        } catch (error) {
+          console.error('Error fetching empleados:', error);
+        }
+      };
+  
+      fetchEmpleados();
+    }, []);
   
     return (
       <div className="p-6">
@@ -54,26 +84,31 @@ const EmpleadosPage: React.FC = () => {
           <table className="min-w-full bg-white">
             <thead className="bg-gray-100 text-left">
               <tr>
+              <th className="px-6 py-3 text-black font-bold">ID</th>
                 <th className="px-6 py-3 text-black font-bold">Nombre</th>
-                <th className="px-6 py-3 text-black font-bold">Rol</th>
+                <th className="px-6 py-3 text-black font-bold">Apellido</th>
+                <th className="px-6 py-3 text-black font-bold">Tipo</th>
               </tr>
             </thead>
             <tbody>
-              {empleados.map((empleado) => (
-                <tr
-                  key={empleado.id}
-                  className={`border-b hover:bg-gray-200 ${
-                    empleadoSeleccionado === empleado.id ? 'bg-purple-100' : ''
-                  }`}
-                  onClick={() => seleccionarEmpleado(empleado.id)}
-                >
-                  <td className="px-6 py-4 text-black">{empleado.nombre}</td>
-                  <td className="px-6 py-4 text-black">{empleado.rol}</td>
-                </tr>
-              ))}
+            {empleados.map((empleado) => (
+              <tr
+                key={empleado.idEmpleado}
+                className={`border-b hover:bg-gray-200 ${
+                  empleadoSeleccionado === empleado.idEmpleado ? 'bg-purple-100' : ''
+                }`}
+                onClick={() => seleccionarEmpleado(empleado.idEmpleado)}
+              >
+                <td className="px-6 py-4 text-black">{empleado.nombreEmpleado}</td>
+                <td className="px-6 py-4 text-black">{empleado.apellidoEmpleado}</td>
+                <td className="px-6 py-4 text-black">{empleado.tipoEmpleado}</td>
+              </tr>
+            ))}
             </tbody>
           </table>
+          {/*<EmpleadosTable empleados={empleados} onSelectEmpleado={handleE}*/}
         </div>
+        
   
         {/* Modal para Agregar Empleado */}
         {isAgregarModalOpen && (
