@@ -1,17 +1,20 @@
 'use client';
 import React, { useState } from 'react';
 
-const ModalCarrito: React.FC = () => {
+interface Producto {
+  id: number;
+  nombre: string;
+  precio: number;
+}
+
+interface ModalCarritoProps {
+  carrito: { producto: Producto; cantidad: number }[];
+  onClose: () => void;
+}
+
+const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
   const [pasoActual, setPasoActual] = useState(1);
 
-  const [productosSeleccionados, setProductosSeleccionados] = useState([
-    { id: '1', nombre: 'Ceviche', cantidad: 1, precio: 50.00 },
-    { id: '2', nombre: 'Pollo a la brasa', cantidad: 2, precio: 40.00 },
-    { id: '3', nombre: 'Parrilla', cantidad: 2, precio: 50.00 },
-    { id: '4', nombre: 'Cerveza', cantidad: 2, precio: 21.00 },
-  ]);
-
-  // Controlar el avance de los pasos
   const avanzarPaso = () => {
     if (pasoActual < 3) {
       setPasoActual(pasoActual + 1);
@@ -23,6 +26,8 @@ const ModalCarrito: React.FC = () => {
       setPasoActual(pasoActual - 1);
     }
   };
+
+  const total = carrito.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -37,7 +42,7 @@ const ModalCarrito: React.FC = () => {
         {/* Pasos */}
         {pasoActual === 1 && (
           <div>
-            <h2 className="text-xl font-bold mb-4 text-black">Selecciona tus platos</h2>
+            <h2 className="text-xl font-bold mb-4 text-black">Carrito de compras</h2>
             <table className="min-w-full table-auto text-black">
               <thead>
                 <tr>
@@ -47,11 +52,11 @@ const ModalCarrito: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {productosSeleccionados.map((producto) => (
-                  <tr key={producto.id} className="hover:bg-gray-100 text-black">
-                    <td className="px-4 py-2 text-black">{producto.nombre}</td>
-                    <td className="px-4 py-2 text-black">{producto.cantidad}</td>
-                    <td className="px-4 py-2 text-black">S/. {producto.precio.toFixed(2)}</td>
+                {carrito.map((item) => (
+                  <tr key={item.producto.id} className="hover:bg-gray-100 text-black">
+                    <td className="px-4 py-2 text-black">{item.producto.nombre}</td>
+                    <td className="px-4 py-2 text-black">{item.cantidad}</td>
+                    <td className="px-4 py-2 text-black">S/. {(item.producto.precio * item.cantidad).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -61,7 +66,7 @@ const ModalCarrito: React.FC = () => {
 
         {pasoActual === 2 && (
           <div>
-            <h2 className="text-xl font-bold mb-4 text-black" >Método de Pago</h2>
+            <h2 className="text-xl font-bold mb-4 text-black">Método de Pago</h2>
             <form>
               <div className="mb-4">
                 <label className="block mb-2 text-black">Nombre en la tarjeta</label>
@@ -86,43 +91,38 @@ const ModalCarrito: React.FC = () => {
         {pasoActual === 3 && (
           <div>
             <h2 className="text-xl font-bold mb-4 text-black">Resumen de la Compra</h2>
-            <p className="mb-4 text-black">Gracias por tu compra. Aquí está el resumen de tu pedido:</p>
+            <p className="mb-4 text-black">Aquí está el resumen de tu pedido:</p>
             <ul className="mb-4 text-black">
-              {productosSeleccionados.map((producto) => (
-                <li key={producto.id}>
-                  {producto.cantidad} x {producto.nombre} - S/. {producto.precio.toFixed(2)}
+              {carrito.map((item) => (
+                <li key={item.producto.id}>
+                  {item.cantidad} x {item.producto.nombre} - S/. {(item.producto.precio * item.cantidad).toFixed(2)}
                 </li>
               ))}
             </ul>
-            <p className="font-bold text-black">Total: S/. {productosSeleccionados.reduce((acc, producto) => acc + (producto.precio * producto.cantidad), 0).toFixed(2)}</p>
+            <p className="font-bold text-black">Total a pagar: S/. {total.toFixed(2)}</p>
           </div>
         )}
 
         {/* Botones */}
         <div className="flex justify-between mt-6">
           {pasoActual > 1 && (
-            <button
-              onClick={retrocederPaso}
-              className="bg-gray-500 text-white py-2 px-4 rounded-lg"
-            >
+            <button onClick={retrocederPaso} className="bg-gray-500 text-white py-2 px-4 rounded-lg">
               Anterior
             </button>
           )}
-          {pasoActual < 3 ? (
-            <button
-              onClick={avanzarPaso}
-              className="bg-red-500 text-white py-2 px-4 rounded-lg"
-            >
+          {pasoActual < 3 && (
+            <button onClick={avanzarPaso} className="bg-red-500 text-white py-2 px-4 rounded-lg">
               Siguiente
             </button>
-          ) : (
-            <button
-              onClick={() => alert('Compra realizada con éxito')}
-              className="bg-green-500 text-white py-2 px-4 rounded-lg"
-            >
-              Comprar
+          )}
+          {pasoActual === 3 && (
+            <button className="bg-green-500 text-white py-2 px-4 rounded-lg">
+              Confirmar
             </button>
           )}
+          <button onClick={onClose} className="bg-gray-500 text-white py-2 px-4 rounded-lg">
+            Cerrar
+          </button>
         </div>
       </div>
     </div>

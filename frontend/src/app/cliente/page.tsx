@@ -1,13 +1,14 @@
 'use client';
 import "@/styles/globals.css";
 import React, { useState } from 'react';
-import ModalCarrito from '@/components/cliente/ModalCarrito'; // Importando el modal como componente
+import ModalCarrito from '@/components/cliente/ModalCarrito'; // Modal del carrito
 
 interface Producto {
   id: number;
   nombre: string;
   precio: number;
 }
+
 
 const productos: { [key: string]: Producto[] } = {
   Entradas: [
@@ -16,7 +17,6 @@ const productos: { [key: string]: Producto[] } = {
     { id: 11, nombre: 'Sopa', precio: 40.00 },
     { id: 12, nombre: 'Cuy Chactado', precio: 40.00 },
     { id: 13, nombre: 'Pollo Broaster', precio: 40.00 },
-
   ],
   'Plato principal': [
     { id: 3, nombre: 'Lomo Saltado', precio: 55.00 },
@@ -35,14 +35,24 @@ const productos: { [key: string]: Producto[] } = {
     { id: 10, nombre: 'Tres Leches', precio: 18.00 },
   ],
 };
-
 const ClientePage: React.FC = () => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Entradas');
-  const [carrito, setCarrito] = useState<Producto[]>([]);
-  const [showModal, setShowModal] = useState(false); // Modal state
+  const [carrito, setCarrito] = useState<{ producto: Producto; cantidad: number }[]>([]);
+  const [showModal, setShowModal] = useState(false);
 
   const agregarAlCarrito = (producto: Producto) => {
-    setCarrito([...carrito, producto]);
+    setCarrito((prevCarrito) => {
+      const productoExistente = prevCarrito.find((item) => item.producto.id === producto.id);
+      if (productoExistente) {
+        return prevCarrito.map((item) =>
+          item.producto.id === producto.id
+            ? { ...item, cantidad: item.cantidad + 1 }
+            : item
+        );
+      } else {
+        return [...prevCarrito, { producto, cantidad: 1 }];
+      }
+    });
   };
 
   const handleCategoriaClick = (categoria: string) => {
@@ -50,12 +60,12 @@ const ClientePage: React.FC = () => {
   };
 
   const toggleModal = () => {
-    setShowModal(!showModal); // Toggle modal open/close
+    setShowModal(!showModal);
   };
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen relative">
-      {/* Header con nombre y carrito */}
+      {/* Header y botones de categoría */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-black">Dish Delight</h1>
         <button onClick={toggleModal} className="text-black text-3xl">
@@ -65,7 +75,6 @@ const ClientePage: React.FC = () => {
 
       <h2 className="text-4xl font-bold mb-8 text-black text-center">Elija su Menú :D</h2>
 
-      {/* Categorías en formato de pestañas */}
       <div className="flex justify-center space-x-4 mb-12">
         {Object.keys(productos).map((categoria) => (
           <button
@@ -82,7 +91,6 @@ const ClientePage: React.FC = () => {
         ))}
       </div>
 
-      {/* Grid de productos */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {productos[categoriaSeleccionada] ? (
           productos[categoriaSeleccionada].map((producto) => (
@@ -107,7 +115,6 @@ const ClientePage: React.FC = () => {
         )}
       </div>
 
-      {/* Renderizando el Modal del Carrito */}
       {showModal && (
         <ModalCarrito carrito={carrito} onClose={toggleModal} />
       )}
