@@ -13,30 +13,27 @@ const LoginModal: React.FC<LoginModalProps> = ({ closeModal }) => {
 
   const handleLogin = () => {
     // Obtener los datos del usuario desde localStorage
-    const usuarioGuardado = localStorage.getItem('usuario');
-    if (!usuarioGuardado) {
-      alert('Usuario no registrado.');
+    const usuariosGuardados = JSON.parse(localStorage.getItem('usuarios') || '[]');
+
+    // Buscar el usuario que coincida con el correo y contraseña
+    const usuario = usuariosGuardados.find((user: any) => user.correo === email && user.contrasena === password);
+
+    if (!usuario) {
+      alert('Correo o contraseña incorrecta.');
       return;
     }
 
-    const { correo, contrasena } = JSON.parse(usuarioGuardado);
-
-    // Verificar correo y contraseña
-    if (email === correo && password === contrasena) {
-      // Redirigir según el correo
-      if (email.includes('@empleadomozo')) {
-        router.push('/mozo');
-      } else if (email.includes('@administrador')) {
-        router.push('/administradorpersonal');
-      } else if (email.includes('@admingeneral')) {
-        router.push('/administradorgeneral');
-      } else if (email.includes('@empleadococina')) {
-        router.push('/cocina');
-      } else {
-        router.push('/');
-      }
+    // Redirigir según el correo
+    if (email.includes('@empleadomozo')) {
+      router.push('/mozo');
+    } else if (email.includes('@administrador')) {
+      router.push('/administradorpersonal');
+    } else if (email.includes('@admingeneral')) {
+      router.push('/administradorgeneral');
+    } else if (email.includes('@empleadococina')) {
+      router.push('/cocina');
     } else {
-      alert('Correo o contraseña incorrecta.');
+      router.push('/');
     }
   };
 

@@ -12,13 +12,21 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ closeModal }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Guardar los datos en localStorage
-    const usuario = {
+    // Obtener los usuarios existentes desde localStorage
+    const usuariosGuardados = JSON.parse(localStorage.getItem('usuarios') || '[]');
+
+    // Crear un nuevo usuario
+    const nuevoUsuario = {
       nombre,
       correo,
       contrasena,
     };
-    localStorage.setItem('usuario', JSON.stringify(usuario));
+
+    // Agregar el nuevo usuario al array
+    usuariosGuardados.push(nuevoUsuario);
+
+    // Guardar el array actualizado en localStorage
+    localStorage.setItem('usuarios', JSON.stringify(usuariosGuardados));
 
     alert('Registro exitoso');
     closeModal(); // Cerrar el modal
