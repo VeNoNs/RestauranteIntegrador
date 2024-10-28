@@ -32,8 +32,13 @@ CASOS DE USO
 
 CONFIGURACIÓN DE LA BASE DE DATOS
    CREATE DATABASE restauranteintegrador;
+   
 Actualiza el archivo application.properties con las credenciales de tu base de datos
+
    spring.datasource.url=jdbc:mysql://localhost:3306/restauranteintegrador
+   
    spring.datasource.username=usuario
+   
    spring.datasource.password=contraseña
+   
    spring.jpa.hibernate.ddl-auto=update
