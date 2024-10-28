@@ -1,7 +1,9 @@
 'use client';
 import "@/styles/globals.css";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+
+// Uso de interfaz para el Pedido
 interface Pedido {
   id: string;
   nombre: string;
@@ -17,6 +19,16 @@ const CocinaPage: React.FC = () => {
   ]);
   
   const [pedidosEnProceso, setPedidosEnProceso] = useState<Pedido[]>([]);
+  const [nombreCocinero, setNombreCocinero] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Obtener el nombre del usuario logueado desde localStorage
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      const { nombre } = JSON.parse(usuarioGuardado);
+      setNombreCocinero(nombre); // Establecer el nombre del cocinero
+    }
+  }, []);
 
   const handleTomarPedido = (pedidoId: string) => {
     const pedidoTomado = pedidos.find(p => p.id === pedidoId);
@@ -32,19 +44,16 @@ const CocinaPage: React.FC = () => {
   };
 
   const handleCerrarSesion = () => {
-    
     router.push('/');
     console.log('Cerrando sesión');
   };
-
-  const nombreCocinero = 'Juan Pérez'; // Aquí puedes colocar el nombre dinámico del usuario logueado.
 
   return (
     <div className="p-8 bg-white min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-black">Cocina</h1>
         <div className="flex items-center space-x-4">
-          <div className="text-xl font-bold text-black">Cocinero: {nombreCocinero}</div>
+          <div className="text-xl font-bold text-black">Cocinero: {nombreCocinero || 'Desconocido'}</div>
           <button
             onClick={handleCerrarSesion}
             className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 flex items-center"
@@ -71,10 +80,7 @@ const CocinaPage: React.FC = () => {
           </thead>
           <tbody>
             {pedidos.map((pedido) => (
-              <tr
-                key={pedido.id}
-                className="hover:bg-gray-200"
-              >
+              <tr key={pedido.id} className="hover:bg-gray-200">
                 <td className="px-4 py-2 text-black border-b">{pedido.id}</td>
                 <td className="px-4 py-2 text-black border-b">{pedido.nombre}</td>
                 <td className="px-4 py-2 border-b">

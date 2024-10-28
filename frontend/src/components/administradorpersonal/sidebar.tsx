@@ -1,22 +1,33 @@
 'use client';
-import React from 'react';
-import { useRouter } from 'next/navigation'; // Cambiado a next/navigation
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Sidebar: React.FC = () => {
   const router = useRouter();
-
-  // Usuario logueado (ejemplo estático, puedes reemplazarlo con datos dinámicos)
-  const usuarioLogueado = 'Juan Pérez'; // Aquí puedes obtener el nombre real del usuario desde el contexto o API
-  const rolUsuario = 'Administrador';  // Ejemplo de rol, puede ser dinámico
+  const [usuarioLogueado, setUsuarioLogueado] = useState<string | null>(null);
+  const [rolUsuario, setRolUsuario] = useState<string>('Administrador Personal'); // Rol por defecto
 
   const handleNavigation = (path: string) => {
-    router.push(path); // Usa router.push de next/navigation
+    router.push(path);
   };
 
   const handleLogout = () => {
-    
+    // Eliminar el usuario del localStorage
+    localStorage.removeItem('loggedInUser');
     router.push('/');
   };
+
+  // Lee los datos del usuario logueado desde localStorage al cargar el componente
+  useEffect(() => {
+    const userData = localStorage.getItem('loggedInUser'); // Nombre del localStorage
+    if (userData) {
+      const { nombre } = JSON.parse(userData);
+      setUsuarioLogueado(nombre);
+      // No se establece rol desde localStorage, se usa el valor por defecto
+    } else {
+      console.log("No hay datos de usuario en localStorage");
+    }
+  }, []);
 
   return (
     <aside className="w-64 bg-gray-100 h-full p-6 flex flex-col justify-between">
@@ -54,8 +65,12 @@ const Sidebar: React.FC = () => {
 
       {/* Mostrar quién está logueado y su rol */}
       <div className="mt-8">
-        <p className="text-black font-bold mb-2">👤 {usuarioLogueado}</p>
-        <p className="text-gray-600 mb-4">{rolUsuario}</p>
+        {usuarioLogueado && (
+          <>
+            <p className="text-black font-bold mb-2">👤 {usuarioLogueado}</p>
+            <p className="text-gray-600 mb-4">{rolUsuario}</p> {/* Mostrar rol por defecto */}
+          </>
+        )}
 
         {/* Botón de logout */}
         <button
