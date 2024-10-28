@@ -8,9 +8,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servicio para la generación de informes en formato Excel.
+ * Utiliza Apache POI para crear y manipular archivos Excel.
+ */
 @Service
 public class ExcelService {
 
+    /**
+     * Genera un informe de empleados en formato Excel.
+     *
+     * @param empleados Lista de empleados a incluir en el informe.
+     * @return Un array de bytes que representa el archivo Excel generado.
+     * @throws IOException Si ocurre un error al escribir el archivo Excel.
+     */
     public byte[] generarInformeEmpleados(List<Empleado> empleados) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Empleados");
