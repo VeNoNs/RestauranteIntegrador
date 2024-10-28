@@ -19,11 +19,10 @@ const Sidebar: React.FC = () => {
 
   // Lee los datos del usuario logueado desde localStorage al cargar el componente
   useEffect(() => {
-    const userData = localStorage.getItem('loggedInUser'); // Nombre del localStorage
+    const userData = localStorage.getItem('loggedInUser');
     if (userData) {
       const { nombre } = JSON.parse(userData);
       setUsuarioLogueado(nombre);
-      // No se establece rol desde localStorage, se usa el valor por defecto
     } else {
       console.log("No hay datos de usuario en localStorage");
     }
@@ -65,12 +64,8 @@ const Sidebar: React.FC = () => {
 
       {/* Mostrar quién está logueado y su rol */}
       <div className="mt-8">
-        {usuarioLogueado && (
-          <>
-            <p className="text-black font-bold mb-2">👤 {usuarioLogueado}</p>
-            <p className="text-gray-600 mb-4">{rolUsuario}</p> {/* Mostrar rol por defecto */}
-          </>
-        )}
+        <p className="text-black font-bold mb-2">👤 {usuarioLogueado || 'Invitado'}</p> {/* Mostrar nombre del usuario, o 'Invitado' si no hay */}
+        <p className="text-gray-600 mb-4">{rolUsuario}</p> {/* Mostrar rol por defecto */}
 
         {/* Botón de logout */}
         <button
