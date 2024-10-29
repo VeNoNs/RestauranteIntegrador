@@ -33,7 +33,9 @@ public class EmpresaComidaServiceImpl implements EmpresaComidaService {
         EmpresaComida empresaBD = empresaComidaRepository.findById(id).orElse(null);
 
         if (empresaBD != null) {
-            empresaBD.setUbicacion(empresa.getUbicacion());
+            // Actualizar los atributos que se permiten modificar
+            empresaBD.setNombreEmpresa(empresa.getNombreEmpresa());
+            empresaBD.setTelefono(empresa.getTelefono());
             return empresaComidaRepository.save(empresaBD);
         }
         return null;

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ComensalRepository extends JpaRepository<Comensal, Long> {
+    
+    Comensal findByCorreoAndPassword(String correo, String password);
 }

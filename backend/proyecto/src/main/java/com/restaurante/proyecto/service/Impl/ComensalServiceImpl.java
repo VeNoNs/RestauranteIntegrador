@@ -9,7 +9,7 @@ import com.restaurante.proyecto.service.ComensalService;
 
 @Service
 public class ComensalServiceImpl implements ComensalService {
-    
+
     @Autowired
     private ComensalRepository comensalRepository;
 
@@ -36,6 +36,7 @@ public class ComensalServiceImpl implements ComensalService {
             comensalBD.setNombreComensal(comensal.getNombreComensal());
             comensalBD.setApellidoComensal(comensal.getApellidoComensal());
             comensalBD.setCorreo(comensal.getCorreo());
+            comensalBD.setPassword(comensal.getPassword());
             return comensalRepository.save(comensalBD);
         }
         return null;

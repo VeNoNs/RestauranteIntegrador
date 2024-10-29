@@ -30,11 +30,13 @@ public class LocalServiceImpl implements LocalService {
 
     @Override
     public Local actualizarLocal(Long id, Local local) {
-        Local localBD = localRepository.findById(id).orElse(null);
+        Local localExistente = localRepository.findById(id).orElse(null);
 
-        if (localBD != null) {
-            localBD.setNroMesa(local.getNroMesa());
-            return localRepository.save(localBD);
+        if (localExistente != null) {
+            localExistente.setNroMesa(local.getNroMesa());
+            localExistente.setUbicacion(local.getUbicacion()); // Añadido
+            localExistente.setEmpresa(local.getEmpresa()); // Añadido
+            return localRepository.save(localExistente);
         }
         return null;
     }

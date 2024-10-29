@@ -1,6 +1,6 @@
 package com.restaurante.proyecto.entities;
-import java.time.LocalDate;
 
+import java.time.LocalDate;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,16 +15,17 @@ public class Comprobante {
     @Column(name = "fechaComprobante", nullable = false)
     private LocalDate fechaComprobante;
 
-    @Column(name = "idPago", nullable = false, length = 5)
-    private String idPago;
+    @ManyToOne
+    @JoinColumn(name = "idPago", nullable = false)
+    private Pago pago;
 
     public Comprobante() {
     }
 
-    public Comprobante(Long idComprobante, LocalDate fechaComprobante, String idPago) {
+    public Comprobante(Long idComprobante, LocalDate fechaComprobante, Pago pago) {
         this.idComprobante = idComprobante;
         this.fechaComprobante = fechaComprobante;
-        this.idPago = idPago;
+        this.pago = pago;
     }
 
     public Long getIdComprobante() {
@@ -43,12 +44,12 @@ public class Comprobante {
         this.fechaComprobante = fechaComprobante;
     }
 
-    public String getIdPago() {
-        return idPago;
+    public Pago getPago() {
+        return pago;
     }
 
-    public void setIdPago(String idPago) {
-        this.idPago = idPago;
+    public void setPago(Pago pago) {
+        this.pago = pago;
     }
 
 }

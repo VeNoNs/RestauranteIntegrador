@@ -1,53 +1,54 @@
-
 package com.restaurante.proyecto.entities;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="administrador_empresa")
-
+@Table(name="administrador_general")
 public class AdministradorEmpresa {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idempresa")
-    private Long idEmpresa;
+    @Column(name = "id_admin_general")
+    private Long idAdminGeneral;
     
-    @Column(name="nombreEmpresa", nullable = false, length = 50)
-    private String nombreEmpresa;
+    @Column(name="nombrePersona", nullable = false, length = 50)
+    private String nombrePersona;
+    
     @Column(name="telefono", nullable = false, length = 15)
-    private String telefono; 
+    private String telefono;
+    
     @Column(name="usuario", nullable = false, length = 50)
     private String usuario;
+    
     @Column(name="password", nullable = false, length = 50)
     private String password;
     
     public AdministradorEmpresa() {
-
     }
 
-    public AdministradorEmpresa(Long idEmpresa, String nombreEmpresa, String telefono, String usuario, String password) {
-        this.idEmpresa = idEmpresa;
-        this.nombreEmpresa = nombreEmpresa;
+    public AdministradorEmpresa(Long idAdminGeneral, String nombrePersona, String telefono, String usuario, String password) {
+        this.idAdminGeneral = idAdminGeneral;
+        this.nombrePersona = nombrePersona;
         this.telefono = telefono;
         this.usuario = usuario;
         this.password = password;
     }
 
-    public Long getIdEmpresa() {
-        return idEmpresa;
+    // Getters y Setters
+    public Long getIdAdminGeneral() {
+        return idAdminGeneral;
     }
 
-    public void setIdEmpresa(Long idEmpresa) {
-        this.idEmpresa = idEmpresa;
+    public void setIdAdminGeneral(Long idAdminGeneral) {
+        this.idAdminGeneral = idAdminGeneral;
     }
 
-    public String getNombreEmpresa() {
-        return nombreEmpresa;
+    public String getNombrePersona() {
+        return nombrePersona;
     }
 
-    public void setNombreEmpresa(String nombreEmpresa) {
-        this.nombreEmpresa = nombreEmpresa;
+    public void setNombrePersona(String nombrePersona) {
+        this.nombrePersona = nombrePersona;
     }
 
     public String getTelefono() {
@@ -74,5 +75,4 @@ public class AdministradorEmpresa {
         this.password = password;
     }
 
-    
 }

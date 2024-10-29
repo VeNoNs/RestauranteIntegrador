@@ -36,6 +36,9 @@ public class EmpleadoServiceImpl implements EmpleadoService {
             empleadoBD.setNombreEmpleado(empleado.getNombreEmpleado());
             empleadoBD.setApellidoEmpleado(empleado.getApellidoEmpleado());
             empleadoBD.setTipoEmpleado(empleado.getTipoEmpleado());
+            empleadoBD.setCorreo(empleado.getCorreo());  // Nuevo campo
+            empleadoBD.setPassword(empleado.getPassword());  // Nuevo campo
+            empleadoBD.setLocal(empleado.getLocal());  // Nuevo campo (relación con Local)
             return empleadoRepository.save(empleadoBD);
         }
         return null;

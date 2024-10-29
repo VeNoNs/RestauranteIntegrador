@@ -1,20 +1,19 @@
 package com.restaurante.proyecto.service;
 
+import com.restaurante.proyecto.entities.AdministradorEmpresa;
 import java.util.List;
 
-import com.restaurante.proyecto.entities.*;
-
 public interface AdministradorEmpresaService {
+
     List<AdministradorEmpresa> obtenerTodos();
 
     AdministradorEmpresa obtenerPorId(Long id);
 
-    AdministradorEmpresa crearEmpresa(AdministradorEmpresa empresa);
+    AdministradorEmpresa crearAdministradorGeneral(AdministradorEmpresa adminGeneral);
 
-    AdministradorEmpresa actualizarEmpresa(Long id, AdministradorEmpresa empresa);
+    AdministradorEmpresa actualizarAdministradorGeneral(Long id, AdministradorEmpresa adminGeneral);
 
-    void eliminarEmpresa(Long id);
+    void eliminarAdministradorGeneral(Long id);
 
-    long contarEmpresa();
-    
+    long contarAdministradorGeneral();
 }

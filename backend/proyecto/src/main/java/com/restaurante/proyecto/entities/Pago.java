@@ -18,13 +18,18 @@ public class Pago {
     @Column(name = "monto", nullable = false)
     private double monto;
 
+    @ManyToOne
+    @JoinColumn(name = "idOrden", nullable = false)
+    private Orden orden;  // Relación con la entidad Orden
+
     public Pago() {
     }
 
-    public Pago(Long idPago, LocalDate fechaPago, double monto) {
+    public Pago(Long idPago, LocalDate fechaPago, double monto, Orden orden) {
         this.idPago = idPago;
         this.fechaPago = fechaPago;
         this.monto = monto;
+        this.orden = orden;
     }
 
     public Long getIdPago() {
@@ -49,5 +54,13 @@ public class Pago {
 
     public void setMonto(double monto) {
         this.monto = monto;
+    }
+
+    public Orden getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Orden orden) {
+        this.orden = orden;
     }
 }

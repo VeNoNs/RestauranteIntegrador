@@ -11,8 +11,8 @@ public class Reserva {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idRegistro")
-    private Long idRegistro;
+    @Column(name = "idReserva")
+    private Long idReserva;
 
     @Column(name = "cantidadPersonas", nullable = false)
     private int cantidadPersonas;
@@ -24,27 +24,26 @@ public class Reserva {
     private LocalTime horaReserva;
 
     @ManyToOne
-    @JoinColumn(name = "idComensal", nullable = false)
-    private Comensal comensal;
+    @JoinColumn(name = "idMesa", nullable = false)
+    private Mesa mesa;
 
     public Reserva() {
     }
 
-    public Reserva(Long idRegistro, int cantidadPersonas, LocalDate fechaReserva, LocalTime horaReserva,
-            Comensal comensal) {
-        this.idRegistro = idRegistro;
+    public Reserva(Long idReserva, int cantidadPersonas, LocalDate fechaReserva, LocalTime horaReserva, Mesa mesa) {
+        this.idReserva = idReserva;
         this.cantidadPersonas = cantidadPersonas;
         this.fechaReserva = fechaReserva;
         this.horaReserva = horaReserva;
-        this.comensal = comensal;
+        this.mesa = mesa;
     }
 
-    public Long getIdRegistro() {
-        return idRegistro;
+    public Long getIdReserva() {
+        return idReserva;
     }
 
-    public void setIdRegistro(Long idRegistro) {
-        this.idRegistro = idRegistro;
+    public void setIdReserva(Long idReserva) {
+        this.idReserva = idReserva;
     }
 
     public int getCantidadPersonas() {
@@ -71,12 +70,11 @@ public class Reserva {
         this.horaReserva = horaReserva;
     }
 
-    public Comensal getComensal() {
-        return comensal;
+    public Mesa getMesa() {
+        return mesa;
     }
 
-    public void setComensal(Comensal comensal) {
-        this.comensal = comensal;
+    public void setMesa(Mesa mesa) {
+        this.mesa = mesa;
     }
-
 }

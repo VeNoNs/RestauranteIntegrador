@@ -5,7 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-
-public interface AdministradorEmpresaRepository extends JpaRepository<AdministradorEmpresa,Long>{
+public interface AdministradorEmpresaRepository extends JpaRepository<AdministradorEmpresa, Long> {
+    // Aquí puedes añadir métodos personalizados si es necesario
     
+     AdministradorEmpresa findByUsuarioAndPassword(String usuario, String password);
 }

@@ -1,7 +1,6 @@
 package com.restaurante.proyecto.entities;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import jakarta.persistence.*;
 
@@ -17,15 +16,6 @@ public class Registro {
     @Column(name = "fechaRegistro", nullable = false)
     private LocalDate fechaRegistro;
 
-    @Column(name = "hora", nullable = false)
-    private LocalTime hora;
-
-    @Column(name = "fechaPago", nullable = false)
-    private LocalDate fechaPago;
-
-    @Column(name = "monto", nullable = false)
-    private double monto;
-
     @ManyToOne
     @JoinColumn(name = "idComensal", nullable = false)
     private Comensal comensal;
@@ -33,13 +23,9 @@ public class Registro {
     public Registro() {
     }
 
-    public Registro(Long idRegistro, LocalDate fechaRegistro, LocalTime hora, LocalDate fechaPago, double monto,
-            Comensal comensal) {
+    public Registro(Long idRegistro, LocalDate fechaRegistro, Comensal comensal) {
         this.idRegistro = idRegistro;
         this.fechaRegistro = fechaRegistro;
-        this.hora = hora;
-        this.fechaPago = fechaPago;
-        this.monto = monto;
         this.comensal = comensal;
     }
 
@@ -59,30 +45,6 @@ public class Registro {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public LocalTime getHora() {
-        return hora;
-    }
-
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
-    }
-
-    public LocalDate getFechaPago() {
-        return fechaPago;
-    }
-
-    public void setFechaPago(LocalDate fechaPago) {
-        this.fechaPago = fechaPago;
-    }
-
-    public double getMonto() {
-        return monto;
-    }
-
-    public void setMonto(double monto) {
-        this.monto = monto;
-    }
-
     public Comensal getComensal() {
         return comensal;
     }
@@ -90,6 +52,4 @@ public class Registro {
     public void setComensal(Comensal comensal) {
         this.comensal = comensal;
     }
-
-    
 }

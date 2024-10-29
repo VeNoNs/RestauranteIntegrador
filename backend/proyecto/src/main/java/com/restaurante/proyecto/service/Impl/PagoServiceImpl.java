@@ -9,7 +9,7 @@ import com.restaurante.proyecto.service.PagoService;
 
 @Service
 public class PagoServiceImpl implements PagoService {
-    
+
     @Autowired
     private PagoRepository pagoRepository;
 
@@ -35,6 +35,7 @@ public class PagoServiceImpl implements PagoService {
         if (pagoBD != null) {
             pagoBD.setFechaPago(pago.getFechaPago());
             pagoBD.setMonto(pago.getMonto());
+            pagoBD.setOrden(pago.getOrden());  // Asegúrate de actualizar la orden si se modifica
             return pagoRepository.save(pagoBD);
         }
         return null;

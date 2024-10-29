@@ -20,21 +20,31 @@ public class Empleado {
     @Column(name = "tipoEmpleado", nullable = false, length = 20)
     private String tipoEmpleado;
 
+    @Column(name = "correo", nullable = false, length = 50)
+    private String correo;
+
+    @Column(name = "password", nullable = false, length = 50)
+    private String password;
+
+    // Relación con Local en lugar de EmpresaComida
     @ManyToOne
-    @JoinColumn(name = "idEmpresa", nullable = false)
-    private EmpresaComida empresa;
+    @JoinColumn(name = "idLocal", nullable = false)
+    private Local local;
 
     public Empleado() {
     }
 
-    public Empleado(Long idEmpleado, String nombreEmpleado, String apellidoEmpleado, String tipoEmpleado, EmpresaComida empresa) {
+    public Empleado(Long idEmpleado, String nombreEmpleado, String apellidoEmpleado, String tipoEmpleado, String correo, String password, Local local) {
         this.idEmpleado = idEmpleado;
         this.nombreEmpleado = nombreEmpleado;
         this.apellidoEmpleado = apellidoEmpleado;
         this.tipoEmpleado = tipoEmpleado;
-        this.empresa = empresa;
+        this.correo = correo;
+        this.password = password;
+        this.local = local;
     }
 
+    // Getters y Setters
     public Long getIdEmpleado() {
         return idEmpleado;
     }
@@ -67,11 +77,27 @@ public class Empleado {
         this.tipoEmpleado = tipoEmpleado;
     }
 
-    public EmpresaComida getEmpresa() {
-        return empresa;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setEmpresa(EmpresaComida empresa) {
-        this.empresa = empresa;
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Local getLocal() {
+        return local;
+    }
+
+    public void setLocal(Local local) {
+        this.local = local;
     }
 }

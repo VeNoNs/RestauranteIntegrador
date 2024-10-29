@@ -3,53 +3,53 @@ package com.restaurante.proyecto.service.Impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.restaurante.proyecto.entities.AdministradorEmpresa;
-import com.restaurante.proyecto.repository.*;
-import com.restaurante.proyecto.service.*;
+import com.restaurante.proyecto.repository.AdministradorEmpresaRepository;
+import com.restaurante.proyecto.service.AdministradorEmpresaService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdministradorEmpresaServiceImpl implements AdministradorEmpresaService{
+public class AdministradorEmpresaServiceImpl implements AdministradorEmpresaService {
     
     @Autowired
-    private AdministradorEmpresaRepository empresaRepository;
+    private AdministradorEmpresaRepository adminGeneralRepository;
 
     @Override
     public List<AdministradorEmpresa> obtenerTodos(){
-        return empresaRepository.findAll();
+        return adminGeneralRepository.findAll();
     }
 
     @Override
     public AdministradorEmpresa obtenerPorId(Long id){
-        return empresaRepository.findById(id).orElse(null);
+        return adminGeneralRepository.findById(id).orElse(null);
     }
 
     @Override
-    public AdministradorEmpresa crearEmpresa(AdministradorEmpresa empresa){
-        return empresaRepository.save(empresa);
+    public AdministradorEmpresa crearAdministradorGeneral(AdministradorEmpresa adminGeneral){
+        return adminGeneralRepository.save(adminGeneral);
     }
 
     @Override
-    public AdministradorEmpresa actualizarEmpresa(Long id, AdministradorEmpresa empresa){
-        AdministradorEmpresa empresaBD = empresaRepository.findById(id).orElse(null);
+    public AdministradorEmpresa actualizarAdministradorGeneral(Long id, AdministradorEmpresa adminGeneral){
+        AdministradorEmpresa adminGeneralBD = adminGeneralRepository.findById(id).orElse(null);
 
-        if(empresaBD != null){
-            empresaBD.setNombreEmpresa(empresa.getNombreEmpresa());
-            empresaBD.setTelefono(empresa.getTelefono());
-            empresaBD.setUsuario(empresa.getUsuario());
-            return empresaRepository.save(empresaBD);
+        if(adminGeneralBD != null){
+            adminGeneralBD.setNombrePersona(adminGeneral.getNombrePersona());
+            adminGeneralBD.setTelefono(adminGeneral.getTelefono());
+            adminGeneralBD.setUsuario(adminGeneral.getUsuario());
+            adminGeneralBD.setPassword(adminGeneral.getPassword());
+            return adminGeneralRepository.save(adminGeneralBD);
         }
         return null;
     }
 
     @Override
-    public void eliminarEmpresa(Long id) {
-        empresaRepository.deleteById(id);
+    public void eliminarAdministradorGeneral(Long id) {
+        adminGeneralRepository.deleteById(id);
     }
 
     @Override
-    public long contarEmpresa() {
-        return empresaRepository.count();
+    public long contarAdministradorGeneral() {
+        return adminGeneralRepository.count();
     }
 }

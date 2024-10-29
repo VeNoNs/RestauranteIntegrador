@@ -36,6 +36,7 @@ public class OrdenServiceImpl implements OrdenService {
             ordenBD.setCantidad(orden.getCantidad());
             ordenBD.setSubTotal(orden.getSubTotal());
             ordenBD.setComida(orden.getComida());
+            ordenBD.setMesa(orden.getMesa());  // Asegúrate de actualizar también la mesa
             return ordenRepository.save(ordenBD);
         }
         return null;

@@ -14,7 +14,7 @@ public class Orden {
     @Column(name = "cantidad", nullable = false)
     private int cantidad;
 
-    @Column(name = "subtotal", nullable = false)
+    @Column(name = "subTotal", nullable = false)
     private double subTotal;
 
     @ManyToOne
@@ -22,20 +22,21 @@ public class Orden {
     private Comida comida;
 
     @ManyToOne
-    @JoinColumn(name = "idEmpresa", nullable = false)
-    private Local local;
+    @JoinColumn(name = "idMesa", nullable = false)
+    private Mesa mesa;
 
     public Orden() {
     }
 
-    public Orden(Long idOrden, int cantidad, double subTotal, Comida comida, Local local) {
+    public Orden(Long idOrden, int cantidad, double subTotal, Comida comida, Mesa mesa) {
         this.idOrden = idOrden;
         this.cantidad = cantidad;
         this.subTotal = subTotal;
         this.comida = comida;
-        this.local = local;
+        this.mesa = mesa;
     }
 
+    // Getters y Setters
     public Long getIdOrden() {
         return idOrden;
     }
@@ -68,11 +69,11 @@ public class Orden {
         this.comida = comida;
     }
 
-    public Local getLocal() {
-        return local;
+    public Mesa getMesa() {
+        return mesa;
     }
 
-    public void setLocal(Local local) {
-        this.local = local;
+    public void setMesa(Mesa mesa) {
+        this.mesa = mesa;
     }
 }

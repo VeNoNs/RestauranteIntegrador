@@ -20,18 +20,23 @@ public class Comida {
     @Column(name = "descripcion", length = 100)
     private String descripcion;
 
-    @Column(name = "precio", nullable = false)
+    @Column(name = "precio", nullable = false, precision = 10)
     private double precio;
+
+    @ManyToOne
+    @JoinColumn(name = "idLocal")
+    private Local local;
 
     public Comida() {
     }
 
-    public Comida(Long idComida, String nombreComida, String tipoComida, String descripcion, double precio) {
+    public Comida(Long idComida, String nombreComida, String tipoComida, String descripcion, double precio, Local local) {
         this.idComida = idComida;
         this.nombreComida = nombreComida;
         this.tipoComida = tipoComida;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.local = local;
     }
 
     public Long getIdComida() {
@@ -72,5 +77,13 @@ public class Comida {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public Local getLocal() {
+        return local;
+    }
+
+    public void setLocal(Local local) {
+        this.local = local;
     }
 }
