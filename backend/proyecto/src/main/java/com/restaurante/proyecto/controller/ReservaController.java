@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * Controlador para manejar las operaciones relacionadas con las reservas.
+ */
 @RestController
 @RequestMapping("/api/reservas")
 public class ReservaController {

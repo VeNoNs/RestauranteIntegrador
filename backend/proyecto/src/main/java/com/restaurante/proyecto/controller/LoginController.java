@@ -4,7 +4,9 @@ import com.restaurante.proyecto.service.Impl.LoginServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+/**
+ * Controlador para manejar las operaciones relacionadas con la autentificación.
+ */
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {

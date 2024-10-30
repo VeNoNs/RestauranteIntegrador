@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * Controlador para manejar las operaciones relacionadas con los registros.
+ */
 @RestController
 @RequestMapping("/api/registros")
 public class RegistroController {
