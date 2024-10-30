@@ -2,7 +2,9 @@ package com.restaurante.proyecto.service;
 
 import com.restaurante.proyecto.entities.Comprobante;
 import java.util.List;
-
+/**
+ * Interfaz que define los servicios para la gestión de {@code Comprobante}.
+ */
 public interface ComprobanteService {
 
     List<Comprobante> obtenerTodos();
