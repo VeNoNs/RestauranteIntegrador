@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import EmpresasTable from '@/components/administradorgeneral/EmpresasTable';
 import AgregarModal from '@/components/administradorgeneral/AgregarModal';
 import EditarModal from '@/components/administradorgeneral/EditarModal';
-
+import { useRouter } from 'next/navigation';
 interface Empresa {
   id: number;
   nombre: string;
@@ -17,6 +17,7 @@ interface Empresa {
 }
 
 const AdminGeneralPage: React.FC = () => {
+  const router = useRouter();
   const [empresas, setEmpresas] = useState<Empresa[]>([]); // Estado para las empresas
   const [selectedEmpresa, setSelectedEmpresa] = useState<Empresa | null>(null);
   const [showAgregarModal, setShowAgregarModal] = useState(false);
@@ -46,7 +47,10 @@ const AdminGeneralPage: React.FC = () => {
   const handleEmpresaAgregada = (nuevaEmpresa: Empresa) => {
     setEmpresas((prevEmpresas) => [...prevEmpresas, nuevaEmpresa]);
   };
-
+  const handleLogout = () => {
+    
+    router.push('/');
+  };
   // Función para manejar cuando una empresa es editada
   const handleEmpresaEditada = (empresaEditada: Empresa) => {
     setEmpresas((prevEmpresas) =>
@@ -78,7 +82,7 @@ const AdminGeneralPage: React.FC = () => {
         <div className="border-t pt-4">
           <p className="text-gray-700 font-medium">{loggedInUser.nombre}</p>
           <p className="text-sm text-gray-500">{loggedInUser.rol}</p>
-          <button className="mt-4 bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 w-full">
+          <button className="mt-4 bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 w-full" onClick={handleLogout}>
             Salir
           </button>
         </div>
