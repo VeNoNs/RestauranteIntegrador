@@ -58,7 +58,7 @@ const EmpresasTable: React.FC<{ onSelectEmpresa: (empresa: Empresa) => void }> =
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Empresa</th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre Empresa</th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
-            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correo Empresa</th>
+            
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Administrador</th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correo Administrador</th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
