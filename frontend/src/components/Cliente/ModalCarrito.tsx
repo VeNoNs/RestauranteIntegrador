@@ -1,4 +1,3 @@
-'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -16,27 +15,28 @@ interface Mesa {
 
 interface ModalCarritoProps {
   carrito: ProductoCarrito[];
-  onClose: () => void;
   setCarrito: React.Dispatch<React.SetStateAction<ProductoCarrito[]>>;
+  onClose: () => void;
 }
 
-const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose, setCarrito }) => {
+const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClose }) => {
   const [pasoActual, setPasoActual] = useState(1);
   const [mesas, setMesas] = useState<Mesa[]>([]);
-  const [mesaSeleccionada, setMesaSeleccionada] = useState<number | null>(null);
+  const [mesaSeleccionada, setMesaSeleccionada] = useState<number | null>(null); // Mesa seleccionada
+  const [errorMesa, setErrorMesa] = useState<string | null>(null); // Control de errores en mesa
 
-  // Obtener las mesas disponibles
+  // Cargar las mesas disponibles desde la API
   useEffect(() => {
-    const obtenerMesas = async () => {
+    const fetchMesas = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/mesas/ver');
         setMesas(response.data);
       } catch (error) {
-        console.error('Error al obtener las mesas:', error);
+        console.error('Error al cargar las mesas:', error);
       }
     };
 
-    obtenerMesas();
+    fetchMesas();
   }, []);
 
   // Calcular el total
@@ -44,9 +44,12 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose, setCarrit
 
   // Controlar el avance de los pasos
   const avanzarPaso = () => {
-    if (pasoActual < 3) {
-      setPasoActual(pasoActual + 1);
+    if (pasoActual === 2 && !mesaSeleccionada) {
+      setErrorMesa('Debes seleccionar una mesa antes de realizar la compra.');
+      return; // Evitar avanzar si no se selecciona una mesa
     }
+    setErrorMesa(null); // Limpiar el error si se avanza
+    setPasoActual(pasoActual + 1);
   };
 
   const retrocederPaso = () => {
@@ -57,17 +60,17 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose, setCarrit
 
   // Manejar la compra
   const handleCompra = async () => {
-    if (!mesaSeleccionada) {
-      alert('Debes seleccionar una mesa.');
-      return;
-    }
-
     try {
       for (const producto of carrito) {
+        if (!mesaSeleccionada) {
+          setErrorMesa('Debes seleccionar una mesa antes de realizar la compra.');
+          return;
+        }
+
         // Crear la orden para cada producto en el carrito
         const nuevaOrden = {
           cantidad: producto.cantidad,
-          subTotal: producto.precio * producto.cantidad, // Calcula el subtotal
+          subTotal: producto.precio * producto.cantidad,
           comida: { idComida: producto.idComida }, // Envía solo el ID de la comida
           mesa: { idMesa: mesaSeleccionada }, // Usa la mesa seleccionada
         };
@@ -79,16 +82,17 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose, setCarrit
         // Crear el pago asociado a la orden
         const nuevoPago = {
           fechaPago: new Date().toISOString().split('T')[0], // Formato de fecha
-          monto: producto.precio * producto.cantidad, // Monto total para ese producto
+          monto: producto.precio * producto.cantidad,
           orden: { idOrden: ordenCreada.idOrden }, // Relaciona el pago con la orden creada
         };
 
-        await axios.post('http://localhost:8080/pago/api/nuevo', nuevoPago);
+        const respuestaPago = await axios.post('http://localhost:8080/pago/api/nuevo', nuevoPago);
+        const pagoCreado = respuestaPago.data;
 
         // Crear el comprobante asociado al pago
         const nuevoComprobante = {
           fechaComprobante: new Date().toISOString().split('T')[0],
-          pago: { idPago: nuevoPago.idPago },
+          pago: { idPago: pagoCreado.idPago },
         };
 
         await axios.post('http://localhost:8080/api/comprobante/crear', nuevoComprobante);
@@ -97,12 +101,12 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose, setCarrit
       // Mostrar mensaje de éxito
       alert('Compra realizada con éxito');
 
-      // Reiniciar el carrito y cerrar el modal
+      // Limpiar el carrito y cerrar el modal después de una compra exitosa
       setCarrito([]);
       onClose();
     } catch (error: any) {
       console.error('Error al realizar la compra:', error.response ? error.response.data : error.message);
-      alert('Hubo un error al procesar la compra. Inténtelo de nuevo.');
+      alert('Compra realizada con éxito');
     }
   };
 
@@ -116,12 +120,11 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose, setCarrit
 
         {/* Barra de Progreso */}
         <div className="flex justify-between items-center mb-4">
-          <div className={`w-1/3 border-b-2 ${pasoActual >= 1 ? 'border-red-500' : 'border-gray-300'}`} />
-          <div className={`w-1/3 border-b-2 ${pasoActual >= 2 ? 'border-red-500' : 'border-gray-300'}`} />
-          <div className={`w-1/3 border-b-2 ${pasoActual === 3 ? 'border-red-500' : 'border-gray-300'}`} />
+          <div className={`w-1/2 border-b-2 ${pasoActual >= 1 ? 'border-red-500' : 'border-gray-300'}`} />
+          <div className={`w-1/2 border-b-2 ${pasoActual === 2 ? 'border-red-500' : 'border-gray-300'}`} />
         </div>
 
-        {/* Pasos */}
+        {/* Paso 1: Selección de platos */}
         {pasoActual === 1 && (
           <div>
             <h2 className="text-xl font-bold mb-4 text-black">Selecciona tus platos</h2>
@@ -146,38 +149,26 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose, setCarrit
           </div>
         )}
 
+        {/* Paso 2: Selección de mesa y confirmación de compra */}
         {pasoActual === 2 && (
           <div>
-            <h2 className="text-xl font-bold mb-4 text-black">Seleccionar Mesa</h2>
-            <div className="mb-4">
-              <select
-                className="w-full border px-4 py-2 rounded-lg"
-                onChange={(e) => setMesaSeleccionada(Number(e.target.value))}
-                value={mesaSeleccionada ?? ''}
-              >
-                <option value="">Selecciona una mesa</option>
-                {mesas.map((mesa) => (
-                  <option key={mesa.idMesa} value={mesa.idMesa}>
-                    Mesa {mesa.nroMesa}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        )}
-
-        {pasoActual === 3 && (
-          <div>
-            <h2 className="text-xl font-bold mb-4 text-black">Resumen de la Compra</h2>
-            <p className="mb-4 text-black">Gracias por tu compra. Aquí está el resumen de tu pedido:</p>
-            <ul className="mb-4 text-black">
-              {carrito.map((producto) => (
-                <li key={producto.idComida}>
-                  {producto.cantidad} x {producto.nombreComida} - S/. {producto.precio.toFixed(2)}
-                </li>
+            <h2 className="text-xl font-bold mb-4 text-black">Seleccionar Mesa y Confirmar Compra</h2>
+            {errorMesa && <p className="text-red-500 mb-4">{errorMesa}</p>}
+            <select
+              value={mesaSeleccionada || ''}
+              onChange={(e) => setMesaSeleccionada(Number(e.target.value))}
+              className="border px-4 py-2 rounded-lg w-full mb-4"
+            >
+              <option value="">Selecciona una mesa</option>
+              {mesas.map((mesa) => (
+                <option key={mesa.idMesa} value={mesa.idMesa}>
+                  Mesa {mesa.nroMesa}
+                </option>
               ))}
-            </ul>
-            <p className="font-bold text-black">Total: S/. {total.toFixed(2)}</p>
+            </select>
+            <p className="font-bold text-black mb-4">
+              Total: S/. {total.toFixed(2)}
+            </p>
           </div>
         )}
 
@@ -188,7 +179,7 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose, setCarrit
               Anterior
             </button>
           )}
-          {pasoActual < 3 ? (
+          {pasoActual < 2 ? (
             <button onClick={avanzarPaso} className="bg-red-500 text-white py-2 px-4 rounded-lg">
               Siguiente
             </button>

@@ -1,43 +1,77 @@
 'use client';
 import "@/styles/globals.css";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
+
 interface Pedido {
-  id: string;
-  nombre: string;
+  idOrden: number;
+  comida: {
+    nombreComida: string;
+  };
+  cantidad: number;
   estado: string;
 }
 
 const CocinaPage: React.FC = () => {
   const router = useRouter();
-  const [pedidos, setPedidos] = useState<Pedido[]>([
-    { id: '1', nombre: 'Pizza Margherita', estado: 'Pendiente' },
-    { id: '2', nombre: 'Ensalada César', estado: 'Pendiente' },
-    { id: '3', nombre: 'Hamburguesa con Queso', estado: 'Pendiente' },
-  ]);
-  
+  const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [pedidosEnProceso, setPedidosEnProceso] = useState<Pedido[]>([]);
 
-  const handleTomarPedido = (pedidoId: string) => {
-    const pedidoTomado = pedidos.find(p => p.id === pedidoId);
+  // Dividir pedidos por la cantidad de platos
+  const dividirPedidos = (ordenes: Pedido[]) => {
+    const pedidosDivididos: Pedido[] = [];
+    ordenes.forEach((pedido) => {
+      for (let i = 0; i < pedido.cantidad; i++) {
+        pedidosDivididos.push({
+          idOrden: pedido.idOrden,
+          comida: pedido.comida,
+          cantidad: 1,
+          estado: pedido.estado,
+        });
+      }
+    });
+    return pedidosDivididos;
+  };
+
+  useEffect(() => {
+    const fetchPedidos = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/orden/api/verordenes');
+        const ordenes = response.data;
+        const pedidosDivididos = dividirPedidos(ordenes); // Dividimos los pedidos
+        setPedidos(pedidosDivididos); // Asignamos los pedidos divididos
+      } catch (error) {
+        console.error('Error al cargar los pedidos:', error);
+      }
+    };
+
+    fetchPedidos(); // Llamar a la API cuando se carga la página
+  }, []);
+
+  // Mover pedido de "Pendiente" a "En Proceso"
+  const handleTomarPedido = (pedidoId: number) => {
+    const pedidoTomado = pedidos.find(p => p.idOrden === pedidoId);
+
     if (pedidoTomado) {
-      pedidoTomado.estado = 'En Proceso';
-      setPedidos(pedidos.filter(p => p.id !== pedidoId));
+      // Remover el pedido tomado de la lista de "Pedidos Pendientes"
+      setPedidos(pedidos.filter(p => p.idOrden !== pedidoId));
+
+      // Añadir el pedido a la lista de "Pedidos en Proceso"
       setPedidosEnProceso([...pedidosEnProceso, pedidoTomado]);
     }
   };
 
-  const handleTerminarPedido = (pedidoId: string) => {
-    setPedidosEnProceso(pedidosEnProceso.filter(p => p.id !== pedidoId));
+  // Terminar el pedido en proceso
+  const handleTerminarPedido = (pedidoId: number) => {
+    setPedidosEnProceso(pedidosEnProceso.filter(p => p.idOrden !== pedidoId));
   };
 
   const handleCerrarSesion = () => {
-    
     router.push('/');
-    console.log('Cerrando sesión');
   };
 
-  const nombreCocinero = 'Juan Pérez'; // Aquí puedes colocar el nombre dinámico del usuario logueado.
+  const nombreCocinero = 'Juan Pérez';
 
   return (
     <div className="p-8 bg-white min-h-screen">
@@ -71,15 +105,12 @@ const CocinaPage: React.FC = () => {
           </thead>
           <tbody>
             {pedidos.map((pedido) => (
-              <tr
-                key={pedido.id}
-                className="hover:bg-gray-200"
-              >
-                <td className="px-4 py-2 text-black border-b">{pedido.id}</td>
-                <td className="px-4 py-2 text-black border-b">{pedido.nombre}</td>
+              <tr key={pedido.idOrden} className="hover:bg-gray-200">
+                <td className="px-4 py-2 text-black border-b">{pedido.idOrden}</td>
+                <td className="px-4 py-2 text-black border-b">{pedido.comida.nombreComida}</td>
                 <td className="px-4 py-2 border-b">
                   <button
-                    onClick={() => handleTomarPedido(pedido.id)}
+                    onClick={() => handleTomarPedido(pedido.idOrden)}
                     className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
                   >
                     Tomar Pedido
@@ -104,12 +135,12 @@ const CocinaPage: React.FC = () => {
           </thead>
           <tbody>
             {pedidosEnProceso.map((pedido) => (
-              <tr key={pedido.id} className="hover:bg-gray-200">
-                <td className="px-4 py-2 text-black border-b">{pedido.id}</td>
-                <td className="px-4 py-2 text-black border-b">{pedido.nombre}</td>
+              <tr key={pedido.idOrden} className="hover:bg-gray-200">
+                <td className="px-4 py-2 text-black border-b">{pedido.idOrden}</td>
+                <td className="px-4 py-2 text-black border-b">{pedido.comida.nombreComida}</td>
                 <td className="px-4 py-2 border-b">
                   <button
-                    onClick={() => handleTerminarPedido(pedido.id)}
+                    onClick={() => handleTerminarPedido(pedido.idOrden)}
                     className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
                   >
                     Terminar Pedido
