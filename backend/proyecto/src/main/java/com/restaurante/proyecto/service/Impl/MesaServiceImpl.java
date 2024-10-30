@@ -1,4 +1,4 @@
-package com.restaurante.proyecto.service.impl;
+package com.restaurante.proyecto.service.Impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import com.restaurante.proyecto.entities.Mesa;
 import com.restaurante.proyecto.repository.MesaRepository;
 import com.restaurante.proyecto.service.MesaService;
-
+/**
+ * Clase de implementación del servicio {@code MesaService}.
+ */
 @Service
 public class MesaServiceImpl implements MesaService {
     

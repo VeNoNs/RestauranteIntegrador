@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import com.restaurante.proyecto.entities.Orden;
 import com.restaurante.proyecto.repository.OrdenRepository;
 import com.restaurante.proyecto.service.OrdenService;
-
+/**
+ * Clase de implementación del servicio {@code OrdenService}.
+ */
 @Service
 public class OrdenServiceImpl implements OrdenService {
     

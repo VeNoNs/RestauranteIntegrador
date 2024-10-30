@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import com.restaurante.proyecto.entities.AdministradorRestaurante;
 import com.restaurante.proyecto.repository.AdministradorRestauranteRepository;
 import com.restaurante.proyecto.service.AdministradorRestauranteService;
-
+/**
+ * Clase de implementación del servicio {@code AdministradorRestauranteService}.
+ */
 @Service
 public class AdministradorRestauranteServiceImpl implements AdministradorRestauranteService {
 

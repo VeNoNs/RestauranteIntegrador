@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import com.restaurante.proyecto.entities.Comprobante;
 import com.restaurante.proyecto.repository.ComprobanteRepository;
 import com.restaurante.proyecto.service.ComprobanteService;
-
+/**
+ * Clase de implementación del servicio {@code ComprobanteService}.
+ */
 @Service
 public class ComprobanteServiceImpl implements ComprobanteService {
     

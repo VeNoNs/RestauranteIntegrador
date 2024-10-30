@@ -11,7 +11,10 @@ import com.restaurante.proyecto.repository.AdministradorEmpresaRepository;
 import com.restaurante.proyecto.repository.AdministradorRestauranteRepository;
 import com.restaurante.proyecto.repository.EmpleadoRepository;
 import com.restaurante.proyecto.repository.ComensalRepository;
+/**
 
+ * Esta clase maneja la verificación de usuarios en diferentes tablas de la base de datos.
+ */
 @Service
 public class LoginServiceImpl {
 

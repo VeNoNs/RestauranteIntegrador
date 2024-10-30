@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import com.restaurante.proyecto.entities.Local;
 import com.restaurante.proyecto.repository.LocalRepository;
 import com.restaurante.proyecto.service.LocalService;
-
+/**
+ * Clase de implementación del servicio {@code LocalService}.
+ */
 @Service
 public class LocalServiceImpl implements LocalService {
     

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import com.restaurante.proyecto.entities.Valoracion;
 import com.restaurante.proyecto.repository.ValoracionRepository;
 import com.restaurante.proyecto.service.ValoracionService;
-
+/**
+ * Clase de implementación del servicio {@code ValoracionService}.
+ */
 @Service
 public class ValoracionServiceImpl implements ValoracionService {
 

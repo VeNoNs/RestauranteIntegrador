@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import com.restaurante.proyecto.entities.Empleado;
 import com.restaurante.proyecto.repository.EmpleadoRepository;
 import com.restaurante.proyecto.service.EmpleadoService;
-
+/**
+ * Clase de implementación del servicio {@code EmpleadoService}.
+ */
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
     
