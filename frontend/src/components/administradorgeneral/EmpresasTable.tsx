@@ -8,7 +8,8 @@ interface Empresa {
   correo: string;
 }
 
-const EmpresasTable: React.FC<{ empresas: Empresa[]; onSelectEmpresa: (empresa: Empresa) => void }> = ({ empresas, onSelectEmpresa }) => {
+
+const EmpresasTable: React.FC<EmpresasTableProps> = ({ empresas, onSelectEmpresa, onEliminarEmpresa }) => {
   return (
     <div className="bg-white shadow rounded-lg overflow-hidden">
       <table className="min-w-full">
@@ -30,10 +31,16 @@ const EmpresasTable: React.FC<{ empresas: Empresa[]; onSelectEmpresa: (empresa: 
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.correo}</td>
               <td className="py-3 px-4">
                 <button
-                  className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800"
+                  className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 mr-2"
                   onClick={() => onSelectEmpresa(empresa)}
                 >
                   Editar
+                </button>
+                <button
+                  className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-800"
+                  onClick={() => onEliminarEmpresa(empresa)}
+                >
+                  Eliminar
                 </button>
               </td>
             </tr>
