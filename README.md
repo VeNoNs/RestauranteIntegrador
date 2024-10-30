@@ -30,6 +30,16 @@ CASOS DE USO
       CU09: Liberar Mesa 
 
 
+   40% DE LOS CASOS DE USO 
+   
+      CU01: Configurar Sistema 
+      
+      CU02: Reservar Mesa  
+      
+      CU03: Seleccionar Comida 
+      
+      CU04: Pagar Orden 
+
 CONFIGURACIÓN DE LA BASE DE DATOS
    
       CREATE DATABASE restauranteintegrador;
