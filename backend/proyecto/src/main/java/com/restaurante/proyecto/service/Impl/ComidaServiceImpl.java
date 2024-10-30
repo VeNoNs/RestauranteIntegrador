@@ -1,49 +1,58 @@
 package com.restaurante.proyecto.service.Impl;
 
 import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.restaurante.proyecto.entities.Comida;
+import com.restaurante.proyecto.repository.ComidaRepository;
 import com.restaurante.proyecto.service.ComidaService;
-
+/**
+ * Clase de implementación del servicio {@code ComidaService}.
+ */
 @Service
 public class ComidaServiceImpl implements ComidaService {
 
+    @Autowired
+    private ComidaRepository comidaRepository;
+
     @Override
     public List<Comida> obtenerTodos() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'obtenerTodos'");
+        return comidaRepository.findAll();
     }
 
     @Override
     public Comida obtenerPorId(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'obtenerPorId'");
+        return comidaRepository.findById(id).orElse(null);
     }
 
     @Override
     public Comida crearComida(Comida comida) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'crearComida'");
+        return comidaRepository.save(comida);
     }
 
     @Override
     public Comida actualizarComida(Long id, Comida comida) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actualizarComida'");
+        Comida comidaBD = comidaRepository.findById(id).orElse(null);
+
+        if (comidaBD != null) {
+            comidaBD.setNombreComida(comida.getNombreComida());
+            comidaBD.setTipoComida(comida.getTipoComida());
+            comidaBD.setDescripcion(comida.getDescripcion());
+            comidaBD.setPrecio(comida.getPrecio());
+            comidaBD.setLocal(comida.getLocal());
+            comidaBD.setImagenUrl(comida.getImagenUrl()); // Actualización de la URL de la imagen
+            return comidaRepository.save(comidaBD);
+        }
+        return null;
     }
 
     @Override
     public void eliminarComida(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'eliminarComida'");
+        comidaRepository.deleteById(id);
     }
 
     @Override
     public long contarComida() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'contarComida'");
+        return comidaRepository.count();
     }
-    // Métodos y lógica de negocio
 }

@@ -8,34 +8,36 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * Controlador para manejar las operaciones relacionadas con los administradores generales.
+ */
 @Controller
-@RequestMapping("/administradorgeneral")
+@RequestMapping("/administrador-general")
 public class AdministradorEmpresaController {
 
     @Autowired
     private AdministradorEmpresaService empresaService;
 
     // 1. GET - Listar todos los registros de la tabla
-    @GetMapping("/api/verempresas")
+    @GetMapping("/api/ver-administradores")
     @ResponseBody
     public List<AdministradorEmpresa> listarEmpresas() {
         return empresaService.obtenerTodos();
     }
 
     // 2. POST - Crear un nuevo registro en la tabla
-    @PostMapping("/api/nueva")
+    @PostMapping("/api/nuevo")
     @ResponseBody
     public ResponseEntity<AdministradorEmpresa> guardarNuevaEmpresa(@RequestBody AdministradorEmpresa empresa) {
-        AdministradorEmpresa nuevaEmpresa = empresaService.crearEmpresa(empresa);
+        AdministradorEmpresa nuevaEmpresa = empresaService.crearAdministradorGeneral(empresa);
         return ResponseEntity.ok(nuevaEmpresa);
     }
 
     // 3. PUT - Editar un registro existente
-    @PutMapping("/api/editar/{idEmpresa}")
+    @PutMapping("/api/editar/{idAdminGeneral}")
     @ResponseBody
-    public ResponseEntity<AdministradorEmpresa> actualizarEmpresa(@PathVariable Long idEmpresa, @RequestBody AdministradorEmpresa empresa) {
-        AdministradorEmpresa empresaActualizada = empresaService.actualizarEmpresa(idEmpresa, empresa);
+    public ResponseEntity<AdministradorEmpresa> actualizarEmpresa(@PathVariable Long idAdminGeneral, @RequestBody AdministradorEmpresa empresa) {
+        AdministradorEmpresa empresaActualizada = empresaService.actualizarAdministradorGeneral(idAdminGeneral, empresa);
         if (empresaActualizada != null) {
             return ResponseEntity.ok(empresaActualizada);
         } else {
@@ -44,10 +46,10 @@ public class AdministradorEmpresaController {
     }
 
     // 4. DELETE - Eliminar un registro por ID
-    @DeleteMapping("/api/eliminar/{idEmpresa}")
+    @DeleteMapping("/api/eliminar/{idAdminGeneral}")
     @ResponseBody
-    public ResponseEntity<Void> eliminarEmpresa(@PathVariable Long idEmpresa) {
-        empresaService.eliminarEmpresa(idEmpresa);
+    public ResponseEntity<Void> eliminarEmpresa(@PathVariable Long idAdminGeneral) {
+        empresaService.eliminarAdministradorGeneral(idAdminGeneral);
         return ResponseEntity.noContent().build();
     }
 }

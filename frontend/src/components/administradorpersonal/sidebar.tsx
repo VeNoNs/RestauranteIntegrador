@@ -24,6 +24,14 @@ const Sidebar: React.FC = () => {
         <h2 className="text-2xl font-bold text-black mb-8">Dish Delight</h2>
         <nav>
           <ul>
+          <li className="mb-6">
+              <button
+                onClick={() => handleNavigation('/administradorpersonal/local')}
+                className="text-gray-600 hover:text-black"
+              >
+                🏠 Local
+              </button>
+            </li>
             <li className="mb-6">
               <button
                 onClick={() => handleNavigation('/administradorpersonal/mesas')}

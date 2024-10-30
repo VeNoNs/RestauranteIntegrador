@@ -1,15 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 interface Empresa {
   id: number;
   nombre: string;
-  empresa: string;
   telefono: string;
   correo: string;
+  administrador?: {
+    nombreAdmin: string;
+    correoAdmin: string;
+  };
 }
 
+const EmpresasTable: React.FC<{ onSelectEmpresa: (empresa: Empresa) => void }> = ({ onSelectEmpresa }) => {
+  const [empresas, setEmpresas] = useState<Empresa[]>([]);
 
-const EmpresasTable: React.FC<EmpresasTableProps> = ({ empresas, onSelectEmpresa, onEliminarEmpresa }) => {
+  useEffect(() => {
+    const fetchEmpresas = async () => {
+      try {
+        // Llamada para obtener las empresas
+        const empresasResponse = await axios.get('http://localhost:8080/empresa/api/verempresas');
+        const empresasData = empresasResponse.data;
+
+        // Llamada para obtener los administradores de las empresas
+        const administradoresResponse = await axios.get('http://localhost:8080/administrador-restaurante/api/ver-administradores');
+        const administradoresData = administradoresResponse.data;
+
+        // Mapeamos las empresas para incluir los datos del administrador
+        const empresasConAdmin = empresasData.map((empresa: any) => {
+          const admin = administradoresData.find((admin: any) => admin.empresa.id === empresa.idEmpresa);
+
+          return {
+            id: empresa.idEmpresa,
+            nombre: empresa.nombreEmpresa,
+            telefono: empresa.telefono,
+            correo: empresa.usuario,
+            administrador: admin
+              ? { nombreAdmin: admin.nombreAdmin, correoAdmin: admin.correoAdmin }
+              : null, // Si no hay administrador, lo dejamos como null
+          };
+        });
+
+        setEmpresas(empresasConAdmin);
+      } catch (error) {
+        console.error('Error fetching empresas or administradores:', error);
+      }
+    };
+
+    fetchEmpresas();
+  }, []);
+
   return (
     <div className="bg-white shadow rounded-lg overflow-hidden">
       <table className="min-w-full">
@@ -18,7 +58,9 @@ const EmpresasTable: React.FC<EmpresasTableProps> = ({ empresas, onSelectEmpresa
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Empresa</th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre Empresa</th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
-            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correo</th>
+            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correo Empresa</th>
+            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Administrador</th>
+            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correo Administrador</th>
             <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
           </tr>
         </thead>
@@ -29,18 +71,14 @@ const EmpresasTable: React.FC<EmpresasTableProps> = ({ empresas, onSelectEmpresa
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.nombre}</td>
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.telefono}</td>
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.correo}</td>
+              <td className="py-3 px-4 text-sm text-gray-900">{empresa.administrador?.nombreAdmin || 'Sin asignar'}</td>
+              <td className="py-3 px-4 text-sm text-gray-900">{empresa.administrador?.correoAdmin || 'Sin asignar'}</td>
               <td className="py-3 px-4">
                 <button
-                  className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 mr-2"
+                  className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800"
                   onClick={() => onSelectEmpresa(empresa)}
                 >
                   Editar
-                </button>
-                <button
-                  className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-800"
-                  onClick={() => onEliminarEmpresa(empresa)}
-                >
-                  Eliminar
                 </button>
               </td>
             </tr>

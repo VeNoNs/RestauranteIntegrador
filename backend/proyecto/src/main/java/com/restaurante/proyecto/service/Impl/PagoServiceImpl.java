@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import com.restaurante.proyecto.entities.Pago;
 import com.restaurante.proyecto.repository.PagoRepository;
 import com.restaurante.proyecto.service.PagoService;
-
+/**
+ * Clase de implementación del servicio {@code PagoService}.
+ */
 @Service
 public class PagoServiceImpl implements PagoService {
-    
+
     @Autowired
     private PagoRepository pagoRepository;
 
@@ -35,6 +37,7 @@ public class PagoServiceImpl implements PagoService {
         if (pagoBD != null) {
             pagoBD.setFechaPago(pago.getFechaPago());
             pagoBD.setMonto(pago.getMonto());
+            pagoBD.setOrden(pago.getOrden());  // Asegúrate de actualizar la orden si se modifica
             return pagoRepository.save(pagoBD);
         }
         return null;

@@ -1,25 +1,47 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+interface Producto {
+  idComida: string;
+  nombreComida: string;
+}
 
 interface ModalEliminarProductoProps {
   onClose: () => void;
+  onProductoEliminado: (id: string) => void; // Callback para actualizar la lista de productos en la vista principal
 }
 
-const ModalEliminarProducto: React.FC<ModalEliminarProductoProps> = ({ onClose }) => {
+const ModalEliminarProducto: React.FC<ModalEliminarProductoProps> = ({ onClose, onProductoEliminado }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [productos, setProductos] = useState<Producto[]>([]); // Estado para almacenar los productos
 
-  const handleEliminarProducto = (productoId: string) => {
-    // Lógica para eliminar el producto
-    onClose();
+  // Llamada a la API para obtener los productos
+  useEffect(() => {
+    const fetchProductos = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/comida/api/vercomidas');
+        setProductos(response.data);
+      } catch (error) {
+        console.error('Error al obtener productos:', error);
+      }
+    };
+
+    fetchProductos();
+  }, []);
+
+  const handleEliminarProducto = async (productoId: string) => {
+    try {
+      await axios.delete(`http://localhost:8080/comida/api/eliminar/${productoId}`);
+      onProductoEliminado(productoId); // Llama al callback para eliminar el producto de la lista principal
+      onClose(); // Cierra el modal
+    } catch (error) {
+      console.error('Error al eliminar producto:', error);
+    }
   };
 
-  const productos = [
-    { id: '1', nombre: 'Producto 1' },
-    { id: '2', nombre: 'Producto 2' },
-  ];
-
   const filteredProductos = productos.filter((producto) =>
-    producto.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    producto.nombreComida.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -39,17 +61,21 @@ const ModalEliminarProducto: React.FC<ModalEliminarProductoProps> = ({ onClose }
         />
 
         <ul className="text-black">
-          {filteredProductos.map((producto) => (
-            <li key={producto.id} className="mb-2 flex justify-between items-center">
-              <span>{producto.nombre}</span>
-              <button
-                onClick={() => handleEliminarProducto(producto.id)}
-                className="bg-red-500 text-white py-1 px-2 rounded"
-              >
-                Eliminar
-              </button>
-            </li>
-          ))}
+          {filteredProductos.length > 0 ? (
+            filteredProductos.map((producto) => (
+              <li key={producto.idComida} className="mb-2 flex justify-between items-center">
+                <span>{producto.nombreComida}</span>
+                <button
+                  onClick={() => handleEliminarProducto(producto.idComida)}
+                  className="bg-red-500 text-white py-1 px-2 rounded"
+                >
+                  Eliminar
+                </button>
+              </li>
+            ))
+          ) : (
+            <li>No se encontraron productos</li>
+          )}
         </ul>
 
         <div className="flex justify-end">

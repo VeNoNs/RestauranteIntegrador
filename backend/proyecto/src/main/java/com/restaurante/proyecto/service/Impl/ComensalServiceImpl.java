@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import com.restaurante.proyecto.entities.Comensal;
 import com.restaurante.proyecto.repository.ComensalRepository;
 import com.restaurante.proyecto.service.ComensalService;
-
+/**
+ * Clase de implementación del servicio {@code ComensalService}.
+ */
 @Service
 public class ComensalServiceImpl implements ComensalService {
-    
+
     @Autowired
     private ComensalRepository comensalRepository;
 
@@ -36,6 +38,7 @@ public class ComensalServiceImpl implements ComensalService {
             comensalBD.setNombreComensal(comensal.getNombreComensal());
             comensalBD.setApellidoComensal(comensal.getApellidoComensal());
             comensalBD.setCorreo(comensal.getCorreo());
+            comensalBD.setPassword(comensal.getPassword());
             return comensalRepository.save(comensalBD);
         }
         return null;
