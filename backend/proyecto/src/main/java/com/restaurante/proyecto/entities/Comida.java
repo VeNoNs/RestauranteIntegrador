@@ -23,6 +23,9 @@ public class Comida {
     @Column(name = "precio", nullable = false, precision = 10)
     private double precio;
 
+    @Column(name = "imagenUrl", length = 255) // Nueva columna para guardar la URL de la imagen
+    private String imagenUrl;
+
     @ManyToOne
     @JoinColumn(name = "idLocal")
     private Local local;
@@ -30,15 +33,17 @@ public class Comida {
     public Comida() {
     }
 
-    public Comida(Long idComida, String nombreComida, String tipoComida, String descripcion, double precio, Local local) {
+    public Comida(Long idComida, String nombreComida, String tipoComida, String descripcion, double precio, String imagenUrl, Local local) {
         this.idComida = idComida;
         this.nombreComida = nombreComida;
         this.tipoComida = tipoComida;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.imagenUrl = imagenUrl;
         this.local = local;
     }
 
+    // Getters y Setters
     public Long getIdComida() {
         return idComida;
     }
@@ -77,6 +82,14 @@ public class Comida {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
     }
 
     public Local getLocal() {

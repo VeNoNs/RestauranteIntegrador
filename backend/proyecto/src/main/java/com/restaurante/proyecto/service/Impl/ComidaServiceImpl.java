@@ -38,6 +38,7 @@ public class ComidaServiceImpl implements ComidaService {
             comidaBD.setDescripcion(comida.getDescripcion());
             comidaBD.setPrecio(comida.getPrecio());
             comidaBD.setLocal(comida.getLocal());
+            comidaBD.setImagenUrl(comida.getImagenUrl()); // Actualización de la URL de la imagen
             return comidaRepository.save(comidaBD);
         }
         return null;

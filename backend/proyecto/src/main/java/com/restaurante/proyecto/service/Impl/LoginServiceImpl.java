@@ -1,4 +1,4 @@
-package com.restaurante.proyecto.service;
+package com.restaurante.proyecto.service.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class LoginServiceImpl {
         // 3. Verifica en la tabla Empleado
         Empleado empleado = empleadoRepo.findByCorreoAndPassword(email, password);
         if (empleado != null) {
-            return "empleado";
+            return "empleado:" + empleado.getTipoEmpleado(); // Devolvemos el tipo de empleado también
         }
 
         // 4. Verifica en la tabla Comensal

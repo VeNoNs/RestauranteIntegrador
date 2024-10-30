@@ -1,19 +1,47 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import ModalAgregarMesa from '@/components/administradorpersonal/ModalAgregarMesa';
 import ModalEliminarMesa from '@/components/administradorpersonal/ModalEliminarMesa';
 
+interface Mesa {
+  idMesa: number;
+  nroMesa: number;
+  cantidadSillas: number;
+  estado: string;
+  local: {
+    idLocal: number;
+    ubicacion: string;
+  };
+}
+
 const MesasPage: React.FC = () => {
+  const [mesas, setMesas] = useState<Mesa[]>([]);
   const [isAgregarModalOpen, setIsAgregarModalOpen] = useState(false);
   const [isEliminarModalOpen, setIsEliminarModalOpen] = useState(false);
-  const [mesaSeleccionada, setMesaSeleccionada] = useState<string | null>(null);
+  const [mesaSeleccionada, setMesaSeleccionada] = useState<number | null>(null);
 
-  const mesas = [
-    { id: '1', numero: 1, asientos: 5, piso: 1 },
-    { id: '2', numero: 2, asientos: 6, piso: 2 },
-    { id: '3', numero: 3, asientos: 10, piso: 1 },
-    { id: '4', numero: 4, asientos: 8, piso: 1 },
-  ];
+  // Función para obtener las mesas desde la API
+  const fetchMesas = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/mesas/ver');
+      setMesas(response.data);
+    } catch (error) {
+      console.error('Error al obtener las mesas:', error);
+    }
+  };
+
+  // Llamar a fetchMesas cuando el componente se monta
+  useEffect(() => {
+    fetchMesas();
+  }, []);
+
+  // Al cerrar el modal, volvemos a hacer fetch de las mesas para actualizar la tabla
+  const handleModalClose = () => {
+    setIsAgregarModalOpen(false);
+    setIsEliminarModalOpen(false);
+    fetchMesas(); // Volvemos a obtener las mesas para actualizar la tabla
+  };
 
   const handleAgregarClick = () => {
     setIsAgregarModalOpen(true);
@@ -23,13 +51,13 @@ const MesasPage: React.FC = () => {
     setIsEliminarModalOpen(true);
   };
 
-  const seleccionarMesa = (id: string) => {
-    setMesaSeleccionada(id);
+  const seleccionarMesa = (idMesa: number) => {
+    setMesaSeleccionada(idMesa);
   };
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-black mb-4">Agregar Mesas</h1>
+      <h1 className="text-3xl font-bold text-black mb-4">Administrar Mesas</h1>
 
       {/* Botones superiores */}
       <div className="flex justify-end space-x-4 mb-4">
@@ -54,22 +82,26 @@ const MesasPage: React.FC = () => {
           <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 text-left text-black">N° Mesa</th>
-              <th className="px-4 py-2 text-left text-black">Número de Asientos</th>
-              <th className="px-4 py-2 text-left text-black">Piso</th>
+              <th className="px-4 py-2 text-left text-black">Cantidad de Sillas</th>
+              <th className="px-4 py-2 text-left text-black">Estado</th>
+              <th className="px-4 py-2 text-left text-black">Local</th>
+              <th className="px-4 py-2 text-left text-black">Dirección del Local</th>
             </tr>
           </thead>
           <tbody>
             {mesas.map((mesa) => (
               <tr
-                key={mesa.id}
+                key={mesa.idMesa}
                 className={`hover:bg-gray-200 cursor-pointer transition-colors ${
-                  mesaSeleccionada === mesa.id ? 'bg-purple-100' : ''
+                  mesaSeleccionada === mesa.idMesa ? 'bg-purple-100' : ''
                 }`}
-                onClick={() => seleccionarMesa(mesa.id)}
+                onClick={() => seleccionarMesa(mesa.idMesa)}
               >
-                <td className="px-4 py-2 text-black border-b border-gray-200">{mesa.numero}</td>
-                <td className="px-4 py-2 text-black border-b border-gray-200">{mesa.asientos}</td>
-                <td className="px-4 py-2 text-black border-b border-gray-200">{mesa.piso}</td>
+                <td className="px-4 py-2 text-black border-b border-gray-200">{mesa.nroMesa}</td>
+                <td className="px-4 py-2 text-black border-b border-gray-200">{mesa.cantidadSillas}</td>
+                <td className="px-4 py-2 text-black border-b border-gray-200">{mesa.estado}</td>
+                <td className="px-4 py-2 text-black border-b border-gray-200">{mesa.local.idLocal}</td>
+                <td className="px-4 py-2 text-black border-b border-gray-200">{mesa.local.ubicacion}</td>
               </tr>
             ))}
           </tbody>
@@ -78,12 +110,12 @@ const MesasPage: React.FC = () => {
 
       {/* Modal para Agregar Mesa */}
       {isAgregarModalOpen && (
-        <ModalAgregarMesa onClose={() => setIsAgregarModalOpen(false)} />
+        <ModalAgregarMesa onClose={handleModalClose} />
       )}
 
       {/* Modal para Eliminar Mesa */}
       {isEliminarModalOpen && (
-        <ModalEliminarMesa onClose={() => setIsEliminarModalOpen(false)} />
+        <ModalEliminarMesa onClose={handleModalClose} />
       )}
     </div>
   );

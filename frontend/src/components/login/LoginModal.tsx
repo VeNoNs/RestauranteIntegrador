@@ -19,19 +19,31 @@ const LoginModal: React.FC<LoginModalProps> = ({ closeModal }) => {
         password,
       });
 
-      const { role } = response.data;
+      const roleOrTipoEmpleado = response.data;
 
-      // Redirigir según el rol del usuario
-      if (role === 'admin_general') {
+      // Manejar las diferentes respuestas
+      if (roleOrTipoEmpleado === 'admin_general') {
         window.location.href = '/administradorgeneral';
-      } else if (role === 'admin_restaurante') {
-        window.location.href = '/dashboard-admin-restaurante';
-      } else if (role === 'empleado') {
-        window.location.href = '/dashboard-empleado';
-      } else if (role === 'comensal') {
-        window.location.href = '/dashboard-comensal';
+      } else if (roleOrTipoEmpleado === 'admin_restaurante') {
+        window.location.href = '/administradorpersonal';
+      } else if (roleOrTipoEmpleado.startsWith('empleado')) {
+        // Verificar el tipo de empleado dividiendo el string y convirtiéndolo a minúsculas
+        const tipoEmpleado = roleOrTipoEmpleado.split(':')[1].toLowerCase(); // Convertir a minúsculas
+        console.log('Tipo de empleado (normalizado):', tipoEmpleado); // Mostrar tipo de empleado normalizado
+        if (tipoEmpleado === 'cocina') {
+          window.location.href = '/cocina'; // Redirigir a la vista de cocina
+        } else if (tipoEmpleado === 'mozo') {
+          window.location.href = '/mozo'; // Redirigir a la vista de mozo
+        } else {
+          setError('Tipo de empleado no reconocido.');
+        }
+      } else if (roleOrTipoEmpleado === 'comensal') {
+        window.location.href = '/cliente';
+      } else {
+        setError('Rol no reconocido.');
       }
     } catch (error) {
+      console.error('Error en autenticación:', error);
       setError('Error de autenticación. Verifique sus credenciales.');
     }
   };
