@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Toast from '@/components/Toast';
 
 interface ProductoCarrito {
   idComida: string;
@@ -22,10 +23,13 @@ interface ModalCarritoProps {
 const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClose }) => {
   const [pasoActual, setPasoActual] = useState(1);
   const [mesas, setMesas] = useState<Mesa[]>([]);
-  const [mesaSeleccionada, setMesaSeleccionada] = useState<number | null>(null); // Mesa seleccionada
-  const [errorMesa, setErrorMesa] = useState<string | null>(null); // Control de errores en mesa
+  const [mesaSeleccionada, setMesaSeleccionada] = useState<number | null>(null);
+  const [errorMesa, setErrorMesa] = useState<string | null>(null);
 
-  // Cargar las mesas disponibles desde la API
+  // Estado para el Toast
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
   useEffect(() => {
     const fetchMesas = async () => {
       try {
@@ -35,20 +39,17 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
         console.error('Error al cargar las mesas:', error);
       }
     };
-
     fetchMesas();
   }, []);
 
-  // Calcular el total
   const total = carrito.reduce((acc, producto) => acc + producto.precio * producto.cantidad, 0);
 
-  // Controlar el avance de los pasos
   const avanzarPaso = () => {
     if (pasoActual === 2 && !mesaSeleccionada) {
       setErrorMesa('Debes seleccionar una mesa antes de realizar la compra.');
-      return; // Evitar avanzar si no se selecciona una mesa
+      return;
     }
-    setErrorMesa(null); // Limpiar el error si se avanza
+    setErrorMesa(null);
     setPasoActual(pasoActual + 1);
   };
 
@@ -58,7 +59,6 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
     }
   };
 
-  // Manejar la compra
   const handleCompra = async () => {
     try {
       for (const producto of carrito) {
@@ -67,29 +67,26 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
           return;
         }
 
-        // Crear la orden para cada producto en el carrito
         const nuevaOrden = {
           cantidad: producto.cantidad,
           subTotal: producto.precio * producto.cantidad,
-          comida: { idComida: producto.idComida }, // Envía solo el ID de la comida
-          mesa: { idMesa: mesaSeleccionada }, // Usa la mesa seleccionada
+          comida: { idComida: producto.idComida },
+          mesa: { idMesa: mesaSeleccionada },
+          estado: "pendiente",
         };
 
-        // Enviar la solicitud para crear una nueva orden
         const respuestaOrden = await axios.post('http://localhost:8080/orden/api/nueva', nuevaOrden);
         const ordenCreada = respuestaOrden.data;
 
-        // Crear el pago asociado a la orden
         const nuevoPago = {
-          fechaPago: new Date().toISOString().split('T')[0], // Formato de fecha
+          fechaPago: new Date().toISOString().split('T')[0],
           monto: producto.precio * producto.cantidad,
-          orden: { idOrden: ordenCreada.idOrden }, // Relaciona el pago con la orden creada
+          orden: { idOrden: ordenCreada.idOrden },
         };
 
         const respuestaPago = await axios.post('http://localhost:8080/pago/api/nuevo', nuevoPago);
         const pagoCreado = respuestaPago.data;
 
-        // Crear el comprobante asociado al pago
         const nuevoComprobante = {
           fechaComprobante: new Date().toISOString().split('T')[0],
           pago: { idPago: pagoCreado.idPago },
@@ -98,15 +95,18 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
         await axios.post('http://localhost:8080/api/comprobante/crear', nuevoComprobante);
       }
 
-      // Mostrar mensaje de éxito
-      alert('Compra realizada con éxito');
+      // Mostrar mensaje de éxito en el Toast
+      setToastMessage('Compra realizada con éxito');
+      setShowToast(true);
 
       // Limpiar el carrito y cerrar el modal después de una compra exitosa
       setCarrito([]);
       onClose();
     } catch (error: any) {
       console.error('Error al realizar la compra:', error.response ? error.response.data : error.message);
-      alert('Compra realizada con éxito');
+      // Mostrar mensaje de error en el Toast
+      setToastMessage('Error al realizar la compra');
+      setShowToast(true);
     }
   };
 
@@ -190,6 +190,9 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
           )}
         </div>
       </div>
+
+      {/* Mostrar Toast si `showToast` es verdadero */}
+      {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} />}
     </div>
   );
 };

@@ -18,29 +18,12 @@ const CocinaPage: React.FC = () => {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [pedidosEnProceso, setPedidosEnProceso] = useState<Pedido[]>([]);
 
-  // Dividir pedidos por la cantidad de platos
-  const dividirPedidos = (ordenes: Pedido[]) => {
-    const pedidosDivididos: Pedido[] = [];
-    ordenes.forEach((pedido) => {
-      for (let i = 0; i < pedido.cantidad; i++) {
-        pedidosDivididos.push({
-          idOrden: pedido.idOrden,
-          comida: pedido.comida,
-          cantidad: 1,
-          estado: pedido.estado,
-        });
-      }
-    });
-    return pedidosDivididos;
-  };
-
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
         const response = await axios.get('http://localhost:8080/orden/api/verordenes');
         const ordenes = response.data;
-        const pedidosDivididos = dividirPedidos(ordenes); // Dividimos los pedidos
-        setPedidos(pedidosDivididos); // Asignamos los pedidos divididos
+        setPedidos(ordenes); // Asignar los pedidos directamente
       } catch (error) {
         console.error('Error al cargar los pedidos:', error);
       }
@@ -54,11 +37,8 @@ const CocinaPage: React.FC = () => {
     const pedidoTomado = pedidos.find(p => p.idOrden === pedidoId);
 
     if (pedidoTomado) {
-      // Remover el pedido tomado de la lista de "Pedidos Pendientes"
-      setPedidos(pedidos.filter(p => p.idOrden !== pedidoId));
-
-      // Añadir el pedido a la lista de "Pedidos en Proceso"
-      setPedidosEnProceso([...pedidosEnProceso, pedidoTomado]);
+      setPedidos(pedidos.filter(p => p.idOrden !== pedidoId)); // Remover de "Pedidos Pendientes"
+      setPedidosEnProceso([...pedidosEnProceso, pedidoTomado]); // Añadir a "Pedidos en Proceso"
     }
   };
 
@@ -100,6 +80,7 @@ const CocinaPage: React.FC = () => {
             <tr>
               <th className="px-4 py-2 text-left text-black border-b">ID Pedido</th>
               <th className="px-4 py-2 text-left text-black border-b">Nombre del Plato</th>
+              <th className="px-4 py-2 text-left text-black border-b">Cantidad</th>
               <th className="px-4 py-2 text-left text-black border-b">Acciones</th>
             </tr>
           </thead>
@@ -108,6 +89,7 @@ const CocinaPage: React.FC = () => {
               <tr key={pedido.idOrden} className="hover:bg-gray-200">
                 <td className="px-4 py-2 text-black border-b">{pedido.idOrden}</td>
                 <td className="px-4 py-2 text-black border-b">{pedido.comida.nombreComida}</td>
+                <td className="px-4 py-2 text-black border-b">{pedido.cantidad}</td>
                 <td className="px-4 py-2 border-b">
                   <button
                     onClick={() => handleTomarPedido(pedido.idOrden)}
@@ -130,6 +112,7 @@ const CocinaPage: React.FC = () => {
             <tr>
               <th className="px-4 py-2 text-left text-black border-b">ID Pedido</th>
               <th className="px-4 py-2 text-left text-black border-b">Nombre del Plato</th>
+              <th className="px-4 py-2 text-left text-black border-b">Cantidad</th>
               <th className="px-4 py-2 text-left text-black border-b">Acciones</th>
             </tr>
           </thead>
@@ -138,6 +121,7 @@ const CocinaPage: React.FC = () => {
               <tr key={pedido.idOrden} className="hover:bg-gray-200">
                 <td className="px-4 py-2 text-black border-b">{pedido.idOrden}</td>
                 <td className="px-4 py-2 text-black border-b">{pedido.comida.nombreComida}</td>
+                <td className="px-4 py-2 text-black border-b">{pedido.cantidad}</td>
                 <td className="px-4 py-2 border-b">
                   <button
                     onClick={() => handleTerminarPedido(pedido.idOrden)}

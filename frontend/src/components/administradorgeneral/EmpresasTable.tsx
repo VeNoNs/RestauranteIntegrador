@@ -70,7 +70,7 @@ const EmpresasTable: React.FC<{ onSelectEmpresa: (empresa: Empresa) => void }> =
               <td className="py-3 px-4 text-sm font-medium text-gray-900">{empresa.id}</td>
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.nombre}</td>
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.telefono}</td>
-              <td className="py-3 px-4 text-sm text-gray-900">{empresa.correo}</td>
+            
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.administrador?.nombreAdmin || 'Sin asignar'}</td>
               <td className="py-3 px-4 text-sm text-gray-900">{empresa.administrador?.correoAdmin || 'Sin asignar'}</td>
               <td className="py-3 px-4">
