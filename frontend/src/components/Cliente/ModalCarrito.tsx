@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Toast from '@/components/Toast';
+import { Alert } from 'reactstrap';
 
 interface ProductoCarrito {
   idComida: string;
@@ -26,9 +26,9 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
   const [mesaSeleccionada, setMesaSeleccionada] = useState<number | null>(null);
   const [errorMesa, setErrorMesa] = useState<string | null>(null);
 
-  // Estado para el Toast
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertColor, setAlertColor] = useState('success'); 
 
   useEffect(() => {
     const fetchMesas = async () => {
@@ -95,36 +95,33 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
         await axios.post('http://localhost:8080/api/comprobante/crear', nuevoComprobante);
       }
 
-      // Mostrar mensaje de éxito en el Toast
-      setToastMessage('Compra realizada con éxito');
-      setShowToast(true);
+      // Mostrar mensaje de éxito en el Alert
+      setAlertMessage('Compra realizada con éxito');
+      setAlertColor('success');
+      setShowAlert(true);
 
-      // Limpiar el carrito y cerrar el modal después de una compra exitosa
       setCarrito([]);
       onClose();
     } catch (error: any) {
       console.error('Error al realizar la compra:', error.response ? error.response.data : error.message);
-      // Mostrar mensaje de error en el Toast
-      setToastMessage('Error al realizar la compra');
-      setShowToast(true);
+      setAlertMessage('Error al realizar la compra');
+      setAlertColor('danger');
+      setShowAlert(true);
     }
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-8 rounded-lg w-full max-w-3xl relative">
-        {/* Botón de cerrar */}
         <button onClick={onClose} className="absolute top-2 right-2 bg-red-500 text-white rounded-md p-3 hover:bg-red-600">
           &times;
         </button>
 
-        {/* Barra de Progreso */}
         <div className="flex justify-between items-center mb-4">
           <div className={`w-1/2 border-b-2 ${pasoActual >= 1 ? 'border-red-500' : 'border-gray-300'}`} />
           <div className={`w-1/2 border-b-2 ${pasoActual === 2 ? 'border-red-500' : 'border-gray-300'}`} />
         </div>
 
-        {/* Paso 1: Selección de platos */}
         {pasoActual === 1 && (
           <div>
             <h2 className="text-xl font-bold mb-4 text-black">Selecciona tus platos</h2>
@@ -149,7 +146,6 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
           </div>
         )}
 
-        {/* Paso 2: Selección de mesa y confirmación de compra */}
         {pasoActual === 2 && (
           <div>
             <h2 className="text-xl font-bold mb-4 text-black">Seleccionar Mesa y Confirmar Compra</h2>
@@ -166,13 +162,10 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
                 </option>
               ))}
             </select>
-            <p className="font-bold text-black mb-4">
-              Total: S/. {total.toFixed(2)}
-            </p>
+            <p className="font-bold text-black mb-4">Total: S/. {total.toFixed(2)}</p>
           </div>
         )}
 
-        {/* Botones */}
         <div className="flex justify-between mt-6">
           {pasoActual > 1 && (
             <button onClick={retrocederPaso} className="bg-gray-500 text-white py-2 px-4 rounded-lg">
@@ -191,8 +184,11 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClos
         </div>
       </div>
 
-      {/* Mostrar Toast si `showToast` es verdadero */}
-      {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} />}
+      {showAlert && (
+        <Alert color={alertColor} toggle={() => setShowAlert(false)} className="fixed bottom-4 right-4 z-50">
+          {alertMessage}
+        </Alert>
+      )}
     </div>
   );
 };

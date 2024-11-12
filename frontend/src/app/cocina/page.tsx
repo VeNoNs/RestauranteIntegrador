@@ -23,7 +23,12 @@ const CocinaPage: React.FC = () => {
       try {
         const response = await axios.get('http://localhost:8080/orden/api/verordenes');
         const ordenes = response.data;
-        setPedidos(ordenes); // Asignar los pedidos directamente
+        
+        // Filtrar pedidos en estado "pendiente" para la primera tabla
+        setPedidos(ordenes.filter((pedido: Pedido) => pedido.estado === "pendiente"));
+        
+        // Filtrar pedidos en estado "en proceso" para la segunda tabla
+        setPedidosEnProceso(ordenes.filter((pedido: Pedido) => pedido.estado === "en proceso"));
       } catch (error) {
         console.error('Error al cargar los pedidos:', error);
       }
@@ -32,19 +37,34 @@ const CocinaPage: React.FC = () => {
     fetchPedidos(); // Llamar a la API cuando se carga la página
   }, []);
 
-  // Mover pedido de "Pendiente" a "En Proceso"
-  const handleTomarPedido = (pedidoId: number) => {
-    const pedidoTomado = pedidos.find(p => p.idOrden === pedidoId);
-
-    if (pedidoTomado) {
-      setPedidos(pedidos.filter(p => p.idOrden !== pedidoId)); // Remover de "Pedidos Pendientes"
-      setPedidosEnProceso([...pedidosEnProceso, pedidoTomado]); // Añadir a "Pedidos en Proceso"
+  const handleTomarPedido = async (pedidoId: number) => {
+    try {
+      // Envía el estado como un objeto JSON
+      await axios.put(`http://localhost:8080/orden/api/editar/${pedidoId}`, { estado: "en proceso" });
+  
+      // Actualiza el estado en el frontend
+      const pedidoTomado = pedidos.find(p => p.idOrden === pedidoId);
+      if (pedidoTomado) {
+        setPedidos(pedidos.filter(p => p.idOrden !== pedidoId));
+        setPedidosEnProceso([...pedidosEnProceso, { ...pedidoTomado, estado: "en proceso" }]);
+      }
+    } catch (error) {
+      console.error('Error al actualizar el estado del pedido a "en proceso":', error);
     }
   };
+  
 
-  // Terminar el pedido en proceso
-  const handleTerminarPedido = (pedidoId: number) => {
-    setPedidosEnProceso(pedidosEnProceso.filter(p => p.idOrden !== pedidoId));
+  // Cambiar estado de "En Proceso" a "Terminado" y actualizar en la base de datos
+  const handleTerminarPedido = async (pedidoId: number) => {
+    try {
+      // Enviar solo el estado actualizado
+      await axios.put(`http://localhost:8080/orden/api/editar/${pedidoId}`, { estado: "terminado" });
+
+      // Actualizar el estado en el frontend
+      setPedidosEnProceso(pedidosEnProceso.filter(p => p.idOrden !== pedidoId)); // Remover de "Pedidos en Proceso"
+    } catch (error) {
+      console.error('Error al actualizar el estado del pedido a "terminado":', error);
+    }
   };
 
   const handleCerrarSesion = () => {
