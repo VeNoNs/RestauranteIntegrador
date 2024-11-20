@@ -30,7 +30,7 @@ CASOS DE USO
       CU09: Liberar Mesa 
 
 
-   40% DE LOS CASOS DE USO 
+   80% DE LOS CASOS DE USO 
    
       CU01: Configurar Sistema 
       
@@ -39,6 +39,13 @@ CASOS DE USO
       CU03: Seleccionar Comida 
       
       CU04: Pagar Orden 
+
+      CU05: Asignación de orden
+
+      CU06: Preparación y confirmación de orden
+
+      CU07: Recogida y Entrega de Orden
+
 
 CONFIGURACIÓN DE LA BASE DE DATOS
    
