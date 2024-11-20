@@ -1,58 +1,56 @@
-'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Alert } from 'reactstrap';
 
-interface Producto {
-  id: number;
-  nombre: string;
+interface ProductoCarrito {
+  idComida: string;
+  nombreComida: string;
+  cantidad: number;
   precio: number;
 }
 
+interface Mesa {
+  idMesa: number;
+  nroMesa: number;
+}
+
 interface ModalCarritoProps {
-  carrito: { producto: Producto; cantidad: number }[];
+  carrito: ProductoCarrito[];
+  setCarrito: React.Dispatch<React.SetStateAction<ProductoCarrito[]>>;
   onClose: () => void;
 }
 
-const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
+const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, setCarrito, onClose }) => {
   const [pasoActual, setPasoActual] = useState(1);
-  const [nombreTarjeta, setNombreTarjeta] = useState('');
-  const [numeroTarjeta, setNumeroTarjeta] = useState('');
-  const [fechaExpiracion, setFechaExpiracion] = useState('');
-  const [codigoCVV, setCodigoCVV] = useState('');
+  const [mesas, setMesas] = useState<Mesa[]>([]);
+  const [mesaSeleccionada, setMesaSeleccionada] = useState<number | null>(null);
+  const [errorMesa, setErrorMesa] = useState<string | null>(null);
 
-  const total = carrito.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertColor, setAlertColor] = useState('success'); 
 
-  const confirmarOrden = async () => {
-    const ordenes = carrito.map(item => ({
-      cantidad: item.cantidad,
-      subTotal: item.producto.precio * item.cantidad,
-      comida: { idComida: item.producto.id }, 
-      local: { idEmpresa: 1 }, 
-    }));
-
-    try {
-      const response = await fetch('/orden/api/nueva', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(ordenes),
-      });
-
-      if (response.ok) {
-        console.log('Órdenes guardadas con éxito');
-        onClose(); // Cerrar el modal después de confirmar
-      } else {
-        console.error('Error al guardar la orden');
+  useEffect(() => {
+    const fetchMesas = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/mesas/ver');
+        setMesas(response.data);
+      } catch (error) {
+        console.error('Error al cargar las mesas:', error);
       }
-    } catch (error) {
-      console.error('Error en la solicitud:', error);
-    }
-  };
+    };
+    fetchMesas();
+  }, []);
+
+  const total = carrito.reduce((acc, producto) => acc + producto.precio * producto.cantidad, 0);
 
   const avanzarPaso = () => {
-    if (pasoActual < 3) {
-      setPasoActual(pasoActual + 1);
+    if (pasoActual === 2 && !mesaSeleccionada) {
+      setErrorMesa('Debes seleccionar una mesa antes de realizar la compra.');
+      return;
     }
+    setErrorMesa(null);
+    setPasoActual(pasoActual + 1);
   };
 
   const retrocederPaso = () => {
@@ -61,20 +59,72 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
     }
   };
 
+  const handleCompra = async () => {
+    try {
+      for (const producto of carrito) {
+        if (!mesaSeleccionada) {
+          setErrorMesa('Debes seleccionar una mesa antes de realizar la compra.');
+          return;
+        }
+
+        const nuevaOrden = {
+          cantidad: producto.cantidad,
+          subTotal: producto.precio * producto.cantidad,
+          comida: { idComida: producto.idComida },
+          mesa: { idMesa: mesaSeleccionada },
+          estado: "pendiente",
+        };
+
+        const respuestaOrden = await axios.post('http://localhost:8080/orden/api/nueva', nuevaOrden);
+        const ordenCreada = respuestaOrden.data;
+
+        const nuevoPago = {
+          fechaPago: new Date().toISOString().split('T')[0],
+          monto: producto.precio * producto.cantidad,
+          orden: { idOrden: ordenCreada.idOrden },
+        };
+
+        const respuestaPago = await axios.post('http://localhost:8080/pago/api/nuevo', nuevoPago);
+        const pagoCreado = respuestaPago.data;
+
+        const nuevoComprobante = {
+          fechaComprobante: new Date().toISOString().split('T')[0],
+          pago: { idPago: pagoCreado.idPago },
+        };
+
+        await axios.post('http://localhost:8080/api/comprobante/crear', nuevoComprobante);
+      }
+
+      // Mostrar mensaje de éxito en el Alert
+      setAlertMessage('Compra realizada con éxito');
+      setAlertColor('success');
+      setShowAlert(true);
+
+      setCarrito([]);
+      onClose();
+    } catch (error: any) {
+      console.error('Error al realizar la compra:', error.response ? error.response.data : error.message);
+      setAlertMessage('Error al realizar la compra');
+      setAlertColor('danger');
+      setShowAlert(true);
+    }
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-8 rounded-lg w-full max-w-3xl">
-        {/* Barra de Progreso */}
+      <div className="bg-white p-8 rounded-lg w-full max-w-3xl relative">
+        <button onClick={onClose} className="absolute top-2 right-2 bg-red-500 text-white rounded-md p-3 hover:bg-red-600">
+          &times;
+        </button>
+
         <div className="flex justify-between items-center mb-4">
-          <div className={`w-1/3 border-b-2 ${pasoActual >= 1 ? 'border-red-500' : 'border-gray-300'}`} />
-          <div className={`w-1/3 border-b-2 ${pasoActual >= 2 ? 'border-red-500' : 'border-gray-300'}`} />
-          <div className={`w-1/3 border-b-2 ${pasoActual === 3 ? 'border-red-500' : 'border-gray-300'}`} />
+          <div className={`w-1/2 border-b-2 ${pasoActual >= 1 ? 'border-red-500' : 'border-gray-300'}`} />
+          <div className={`w-1/2 border-b-2 ${pasoActual === 2 ? 'border-red-500' : 'border-gray-300'}`} />
         </div>
 
-        {/* Pasos */}
         {pasoActual === 1 && (
           <div>
-            <h2 className="text-xl font-bold mb-4 text-black">Carrito de compras</h2>
+            <h2 className="text-xl font-bold mb-4 text-black">Selecciona tus platos</h2>
             <table className="min-w-full table-auto text-black">
               <thead>
                 <tr>
@@ -84,11 +134,11 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
                 </tr>
               </thead>
               <tbody>
-                {carrito.map((item) => (
-                  <tr key={item.producto.id} className="hover:bg-gray-100 text-black">
-                    <td className="px-4 py-2 text-black">{item.producto.nombre}</td>
-                    <td className="px-4 py-2 text-black">{item.cantidad}</td>
-                    <td className="px-4 py-2 text-black">S/. {(item.producto.precio * item.cantidad).toFixed(2)}</td>
+                {carrito.map((producto) => (
+                  <tr key={producto.idComida} className="hover:bg-gray-100 text-black">
+                    <td className="px-4 py-2 text-black">{producto.nombreComida}</td>
+                    <td className="px-4 py-2 text-black">{producto.cantidad}</td>
+                    <td className="px-4 py-2 text-black">S/. {producto.precio.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -98,85 +148,47 @@ const ModalCarrito: React.FC<ModalCarritoProps> = ({ carrito, onClose }) => {
 
         {pasoActual === 2 && (
           <div>
-            <h2 className="text-xl font-bold mb-4 text-black">Método de Pago</h2>
-            <form>
-              <div className="mb-4">
-                <label className="block mb-2 text-black">Nombre en la tarjeta</label>
-                <input
-                  type="text"
-                  className="w-full border px-4 py-2 rounded-lg"
-                  value={nombreTarjeta}
-                  onChange={(e) => setNombreTarjeta(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block mb-2 text-black">Número de la tarjeta</label>
-                <input
-                  type="text"
-                  className="w-full border px-4 py-2 rounded-lg"
-                  value={numeroTarjeta}
-                  onChange={(e) => setNumeroTarjeta(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block mb-2 text-black">Fecha de expiración</label>
-                <input
-                  type="text"
-                  className="w-full border px-4 py-2 rounded-lg"
-                  value={fechaExpiracion}
-                  onChange={(e) => setFechaExpiracion(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block mb-2 text-black">Código CVV</label>
-                <input
-                  type="text"
-                  className="w-full border px-4 py-2 rounded-lg"
-                  value={codigoCVV}
-                  onChange={(e) => setCodigoCVV(e.target.value)}
-                />
-              </div>
-            </form>
-          </div>
-        )}
-
-        {pasoActual === 3 && (
-          <div>
-            <h2 className="text-xl font-bold mb-4 text-black">Resumen de la Compra</h2>
-            <p className="mb-4 text-black">Aquí está el resumen de tu pedido:</p>
-            <ul className="mb-4 text-black">
-              {carrito.map((item) => (
-                <li key={item.producto.id}>
-                  {item.cantidad} x {item.producto.nombre} - S/. {(item.producto.precio * item.cantidad).toFixed(2)}
-                </li>
+            <h2 className="text-xl font-bold mb-4 text-black">Seleccionar Mesa y Confirmar Compra</h2>
+            {errorMesa && <p className="text-red-500 mb-4">{errorMesa}</p>}
+            <select
+              value={mesaSeleccionada || ''}
+              onChange={(e) => setMesaSeleccionada(Number(e.target.value))}
+              className="border px-4 py-2 rounded-lg w-full mb-4"
+            >
+              <option value="">Selecciona una mesa</option>
+              {mesas.map((mesa) => (
+                <option key={mesa.idMesa} value={mesa.idMesa}>
+                  Mesa {mesa.nroMesa}
+                </option>
               ))}
-            </ul>
-            <p className="font-bold text-black">Total a pagar: S/. {total.toFixed(2)}</p>
+            </select>
+            <p className="font-bold text-black mb-4">Total: S/. {total.toFixed(2)}</p>
           </div>
         )}
 
-        {/* Botones */}
         <div className="flex justify-between mt-6">
           {pasoActual > 1 && (
             <button onClick={retrocederPaso} className="bg-gray-500 text-white py-2 px-4 rounded-lg">
               Anterior
             </button>
           )}
-          {pasoActual < 3 && (
+          {pasoActual < 2 ? (
             <button onClick={avanzarPaso} className="bg-red-500 text-white py-2 px-4 rounded-lg">
               Siguiente
             </button>
-          )}
-          {pasoActual === 3 && (
-            <button onClick={confirmarOrden} className="bg-green-500 text-white py-2 px-4 rounded-lg">
-              Confirmar
+          ) : (
+            <button onClick={handleCompra} className="bg-green-500 text-white py-2 px-4 rounded-lg">
+              Comprar
             </button>
           )}
-          <button onClick={onClose} className="bg-gray-500 text-white py-2 px-4 rounded-lg">
-            Cancelar
-          </button>
         </div>
       </div>
+
+      {showAlert && (
+        <Alert color={alertColor} toggle={() => setShowAlert(false)} className="fixed bottom-4 right-4 z-50">
+          {alertMessage}
+        </Alert>
+      )}
     </div>
   );
 };
