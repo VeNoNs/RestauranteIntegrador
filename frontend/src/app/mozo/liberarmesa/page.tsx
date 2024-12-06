@@ -1,12 +1,18 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Alert, Button } from 'reactstrap';
+import { Alert } from 'reactstrap';
+
+interface Local {
+  idLocal: number;
+}
 
 interface Mesa {
   idMesa: number;
   nroMesa: number;
+  cantidadSillas: number;
   estado: string;
+  local: Local;
 }
 
 const LiberarMesaPage: React.FC = () => {
@@ -15,12 +21,13 @@ const LiberarMesaPage: React.FC = () => {
   const [alertColor, setAlertColor] = useState<'success' | 'danger'>('success');
 
   useEffect(() => {
-    // Obtener todas las mesas ocupadas desde la API
+    // Obtener todas las mesas desde la API
     const fetchMesas = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/mesas/ver');
         const mesasOcupadas = response.data.filter((mesa: Mesa) => mesa.estado === 'Ocupada');
         setMesas(mesasOcupadas);
+        console.log('Datos obtenidos desde la API:', response.data); // Verificar datos que llegan
       } catch (error) {
         console.error('Error al cargar las mesas:', error);
       }
@@ -31,14 +38,27 @@ const LiberarMesaPage: React.FC = () => {
 
   const liberarMesa = async (idMesa: number) => {
     try {
-      // Cambiar el estado de la mesa a "disponible"
-      await axios.put(`http://localhost:8080/api/mesas/editar/${idMesa}`, { estado: 'disponible' });
+      // Buscar la mesa que se va a liberar
+      const mesa = mesas.find((mesa) => mesa.idMesa === idMesa);
+      if (!mesa) {
+        throw new Error('Mesa no encontrada.');
+      }
 
-      // Actualizar el estado del frontend para remover la mesa de la lista
+      // Crear un objeto con el estado modificado
+      const mesaActualizada = {
+        ...mesa,
+        estado: 'Disponible', // Cambiar solo el estado
+      };
+
+      // Enviar toda la información de la mesa al backend
+      console.log('Datos enviados al backend:', mesaActualizada); // Verificar datos que se envían
+      await axios.put(`http://localhost:8080/api/mesas/editar/${idMesa}`, mesaActualizada);
+
+      // Actualizar la lista de mesas en el frontend
       setMesas(mesas.filter((mesa) => mesa.idMesa !== idMesa));
 
       // Mostrar alerta de éxito
-      setAlertMessage(`Mesa N°${idMesa} liberada con éxito.`);
+      setAlertMessage(`Mesa N°${mesa.nroMesa} liberada con éxito.`);
       setAlertColor('success');
     } catch (error) {
       console.error('Error al liberar la mesa:', error);
