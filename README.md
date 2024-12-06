@@ -47,6 +47,7 @@ CASOS DE USO
       CU07: Recogida y Entrega de Orden
 
  100% DE LOS CASOS DE USO 
+ 
       CU01: Configurar Sistema 
       
       CU02: Reservar Mesa  
