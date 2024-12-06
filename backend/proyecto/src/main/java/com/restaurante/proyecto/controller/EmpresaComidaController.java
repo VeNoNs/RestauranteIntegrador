@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * Controlador para manejar las operaciones relacionadas con las empresas.
+ */
 @Controller
 @RequestMapping("/empresa")
 public class EmpresaComidaController {

@@ -8,7 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import java.util.Map;
+/**
+ * Controlador para manejar las operaciones relacionadas con las ordenes.
+ */
 @Controller
 @RequestMapping("/orden")
 public class OrdenController {
@@ -31,17 +34,24 @@ public class OrdenController {
         return ResponseEntity.ok(nuevaOrden);
     }
 
-    // 3. PUT - Editar un registro existente
-    @PutMapping("/api/editar/{idOrden}")
-    @ResponseBody
-    public ResponseEntity<Orden> actualizarOrden(@PathVariable Long idOrden, @RequestBody Orden orden) {
-        Orden ordenActualizada = ordenService.actualizarOrden(idOrden, orden);
-        if (ordenActualizada != null) {
-            return ResponseEntity.ok(ordenActualizada);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    // Modificar el estado de una orden existente
+// Modificar el estado de una orden existente
+@PutMapping("/api/editar/{idOrden}")
+@ResponseBody
+public ResponseEntity<Orden> actualizarEstadoOrden(@PathVariable Long idOrden, @RequestBody Map<String, String> estadoMap) {
+    Orden ordenExistente = ordenService.obtenerPorId(idOrden);
+    if (ordenExistente != null) {
+        // Cambiar el estado de la orden usando el valor del mapa
+        String nuevoEstado = estadoMap.get("estado");
+        ordenExistente.setEstado(nuevoEstado);
+        Orden ordenActualizada = ordenService.actualizarOrden(idOrden, ordenExistente);
+        return ResponseEntity.ok(ordenActualizada);
+    } else {
+        return ResponseEntity.notFound().build();
     }
+}
+
+
 
     // 4. DELETE - Eliminar un registro por ID
     @DeleteMapping("/api/eliminar/{idOrden}")
@@ -50,4 +60,16 @@ public class OrdenController {
         ordenService.eliminarOrden(idOrden);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/api/verorden/{idOrden}")
+@ResponseBody
+public ResponseEntity<Orden> obtenerOrdenPorId(@PathVariable Long idOrden) {
+    Orden orden = ordenService.obtenerPorId(idOrden);
+    if (orden != null) {
+        return ResponseEntity.ok(orden);
+    } else {
+        return ResponseEntity.notFound().build();
+    }
+}
+
 }

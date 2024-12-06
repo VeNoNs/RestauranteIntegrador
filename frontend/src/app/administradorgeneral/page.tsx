@@ -4,8 +4,7 @@ import React, { useState } from 'react';
 import EmpresasTable from '@/components/administradorgeneral/EmpresasTable';
 import AgregarModal from '@/components/administradorgeneral/AgregarModal';
 import EditarModal from '@/components/administradorgeneral/EditarModal';
-
-
+import { useRouter } from 'next/navigation';
 interface Empresa {
     id: number;
     nombre: string;

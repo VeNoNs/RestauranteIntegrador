@@ -3,53 +3,83 @@ package com.restaurante.proyecto.service.Impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.restaurante.proyecto.entities.AdministradorEmpresa;
-import com.restaurante.proyecto.repository.*;
-import com.restaurante.proyecto.service.*;
+import com.restaurante.proyecto.repository.AdministradorEmpresaRepository;
+import com.restaurante.proyecto.service.AdministradorEmpresaService;
 import org.springframework.stereotype.Service;
-
+/**
+ * Clase de implementación del servicio {@code AdministradorEmpresaService}.
+ */
 @Service
-public class AdministradorEmpresaServiceImpl implements AdministradorEmpresaService{
-    
-    @Autowired
-    private AdministradorEmpresaRepository empresaRepository;
+public class AdministradorEmpresaServiceImpl implements AdministradorEmpresaService {
 
+    @Autowired
+    private AdministradorEmpresaRepository adminGeneralRepository;
+    /**
+     * Obtiene una lista de todos los administradores de empresa.
+     *
+     * @return una lista de {@code AdministradorEmpresa}
+     */
     @Override
     public List<AdministradorEmpresa> obtenerTodos(){
-        return empresaRepository.findAll();
+        return adminGeneralRepository.findAll();
     }
-
+    /**
+     * Obtiene un administrador de empresa por su identificador.
+     *
+     * @param id el identificador del administrador de empresa
+     * @return el administrador de empresa correspondiente al identificador, o {@code null} si no existe
+     */
     @Override
     public AdministradorEmpresa obtenerPorId(Long id){
-        return empresaRepository.findById(id).orElse(null);
+        return adminGeneralRepository.findById(id).orElse(null);
     }
-
+    /**
+     * Crea un nuevo administrador de empresa.
+     *
+     * @param adminGeneral el administrador de empresa a crear
+     * @return el administrador de empresa creado
+     */
     @Override
-    public AdministradorEmpresa crearEmpresa(AdministradorEmpresa empresa){
-        return empresaRepository.save(empresa);
+    public AdministradorEmpresa crearAdministradorGeneral(AdministradorEmpresa adminGeneral){
+        return adminGeneralRepository.save(adminGeneral);
     }
-
+    /**
+     * Actualiza un administrador de empresa existente.
+     *
+     * @param id el identificador del administrador a actualizar
+     * @param adminGeneral los nuevos datos del administrador de empresa
+     * @return el administrador de empresa actualizado, o {@code null} si no se encuentra
+     */
     @Override
-    public AdministradorEmpresa actualizarEmpresa(Long id, AdministradorEmpresa empresa){
-        AdministradorEmpresa empresaBD = empresaRepository.findById(id).orElse(null);
+    public AdministradorEmpresa actualizarAdministradorGeneral(Long id, AdministradorEmpresa adminGeneral){
+        AdministradorEmpresa adminGeneralBD = adminGeneralRepository.findById(id).orElse(null);
 
-        if(empresaBD != null){
-            empresaBD.setNombreEmpresa(empresa.getNombreEmpresa());
-            empresaBD.setTelefono(empresa.getTelefono());
-            empresaBD.setUsuario(empresa.getUsuario());
-            return empresaRepository.save(empresaBD);
+        if(adminGeneralBD != null){
+            adminGeneralBD.setNombrePersona(adminGeneral.getNombrePersona());
+            adminGeneralBD.setTelefono(adminGeneral.getTelefono());
+            adminGeneralBD.setUsuario(adminGeneral.getUsuario());
+            adminGeneralBD.setPassword(adminGeneral.getPassword());
+            return adminGeneralRepository.save(adminGeneralBD);
         }
         return null;
     }
-
+    /**
+     * Elimina un administrador de empresa por su identificador.
+     *
+     * @param id el identificador del administrador a eliminar
+     */
     @Override
-    public void eliminarEmpresa(Long id) {
-        empresaRepository.deleteById(id);
+    public void eliminarAdministradorGeneral(Long id) {
+        adminGeneralRepository.deleteById(id);
     }
-
+    /**
+     * Cuenta el número total de administradores de empresa.
+     *
+     * @return el número total de administradores de empresa
+     */
     @Override
-    public long contarEmpresa() {
-        return empresaRepository.count();
+    public long contarAdministradorGeneral() {
+        return adminGeneralRepository.count();
     }
 }

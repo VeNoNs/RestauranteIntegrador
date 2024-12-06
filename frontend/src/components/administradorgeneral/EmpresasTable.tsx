@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 interface Empresa {
   id: number;
   nombre: string;
-  empresa: string;
   telefono: string;
   correo: string;
+  administrador?: {
+    nombreAdmin: string;
+    correoAdmin: string;
+  };
 }
 
 const EmpresasTable: React.FC<{ onSelectEmpresa: (empresa: Empresa) => void }> = ({ onSelectEmpresa }) => {

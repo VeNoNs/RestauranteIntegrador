@@ -2,19 +2,24 @@ package com.restaurante.proyecto.entities;
 
 import jakarta.persistence.*;
 
+/**
+ * Clase que representa una orden en el sistema de gestión de restaurantes.
+ *
+ * Una orden contiene información sobre la cantidad de comida, el subtotal,
+ * y está asociada a un tipo de comida y a una mesa específica.
+ */
 @Entity
 @Table(name = "orden")
 public class Orden {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idorden")
+    @Column(name = "idOrden")
     private Long idOrden;
 
     @Column(name = "cantidad", nullable = false)
     private int cantidad;
 
-    @Column(name = "subtotal", nullable = false)
+    @Column(name = "subTotal", nullable = false)
     private double subTotal;
 
     @ManyToOne
@@ -22,19 +27,31 @@ public class Orden {
     private Comida comida;
 
     @ManyToOne
-    @JoinColumn(name = "idEmpresa", nullable = false)
-    private Local local;
+    @JoinColumn(name = "idMesa", nullable = false)
+    private Mesa mesa;
 
+    /**
+     * Estado actual de la orden, puede ser "pendiente", "en proceso", "terminado", etc.
+     * Este campo es obligatorio.
+     */
+    @Column(name = "estado", nullable = false)
+    private String estado;
+
+    // Constructor vacío
     public Orden() {
     }
 
-    public Orden(Long idOrden, int cantidad, double subTotal, Comida comida, Local local) {
+    // Constructor con parámetros
+    public Orden(Long idOrden, int cantidad, double subTotal, Comida comida, Mesa mesa, String estado) {
         this.idOrden = idOrden;
         this.cantidad = cantidad;
         this.subTotal = subTotal;
         this.comida = comida;
-        this.local = local;
+        this.mesa = mesa;
+        this.estado = estado;
     }
+
+    // Getters y Setters
 
     public Long getIdOrden() {
         return idOrden;
@@ -68,11 +85,29 @@ public class Orden {
         this.comida = comida;
     }
 
-    public Local getLocal() {
-        return local;
+    public Mesa getMesa() {
+        return mesa;
     }
 
-    public void setLocal(Local local) {
-        this.local = local;
+    public void setMesa(Mesa mesa) {
+        this.mesa = mesa;
+    }
+
+    /**
+     * Obtiene el estado actual de la orden.
+     *
+     * @return el estado de la orden (por ejemplo, "pendiente", "en proceso", "terminado")
+     */
+    public String getEstado() {
+        return estado;
+    }
+
+    /**
+     * Establece el estado actual de la orden.
+     *
+     * @param estado el nuevo estado de la orden
+     */
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
